@@ -12,13 +12,14 @@ public class ShieldController : MonoBehaviour
 
     private BoxCollider2D shieldCollider;
 
-    private int shieldHp = 100;
+    private float shieldHp = 100;
 
     [SerializeField]
     private float shieldDuration = 100f;
 
+    [SerializeField]
     private float shieldTimeLeft;
-
+  
     [SerializeField]
     private bool isShieldActive = false;
 
@@ -33,9 +34,14 @@ public class ShieldController : MonoBehaviour
     void Start()
     {
         DisableShield();
+        ShieldBroker.CallShieldIsDisabled();
+
+        ShieldBroker.ShieldTookDamage += ShieldBroker_ShieldTookDamage;
+
         shieldTimeLeft = shieldDuration;
-        //StartCoroutine(InitialShieldFlashing());
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -52,10 +58,12 @@ public class ShieldController : MonoBehaviour
                 DisableShield(); // disable the shield with an event. probably better.
             }
         }
-        
-        if(isShieldActive)
+
+        if (isShieldActive)
         {
             ShieldTimeBurning();
+
+            ShieldBroker.CallShieldIsBurning();
         }
     }
 
@@ -64,6 +72,8 @@ public class ShieldController : MonoBehaviour
         shieldSpriteRenderer.enabled = true;
         shieldCollider.enabled = true;
         isShieldActive = true;
+
+        ShieldBroker.CallShieldIsEnabled();
     }
 
     private void DisableShield()
@@ -71,6 +81,8 @@ public class ShieldController : MonoBehaviour
         shieldSpriteRenderer.enabled = false;
         shieldCollider.enabled = false;
         isShieldActive = false;
+
+        ShieldBroker.CallShieldIsDisabled();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -78,13 +90,11 @@ public class ShieldController : MonoBehaviour
         if(isShieldActive)
         {
             if(collision.collider.CompareTag("Enemy"))
-            {
-                //ShieldDamaged(); reduce the time left by some seconds depending on the enemy or projectile or something!
+            { 
                 Destroy(collision.gameObject); // For testing purpose just destroy the enemy on contact
             }
         }
     }
-
     private void ShieldTimeBurning()
     {
         if (shieldTimeLeft > 0)
@@ -97,10 +107,10 @@ public class ShieldController : MonoBehaviour
             DisableShield();
         }
     }
-
-    private void ShieldDamaged(int damagaValue)
+    private void ShieldBroker_ShieldTookDamage(float damageValue)
     {
-        shieldHp -= damagaValue;
+        shieldHp -= damageValue;
+        shieldTimeLeft -= damageValue;
     }
 
     private IEnumerator InitialShieldFlashing()

@@ -45,14 +45,6 @@ public class PlayerStats : MonoBehaviour
         UpdateHealthStats(damageValue);
     }
 
-    
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void UpdateHealthStats(int damageValue)
     {
         playerCurrentHealth -= damageValue;

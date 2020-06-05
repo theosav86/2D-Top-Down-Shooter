@@ -19,7 +19,9 @@ public class EnemyController : MonoBehaviour
     private Transform playerTransform;
     private Vector3 enemyDirection;
     private Rigidbody2D enemyRigidBody;
-    private GameSceneController gameSceneController;
+
+    private float shieldDamage = 20f;
+    //private int playerDamage = 50;
 
     //declaration of the event enemy killed
     public event EnemyKilledHandler EnemyKilled;
@@ -29,10 +31,10 @@ public class EnemyController : MonoBehaviour
     {
         enemyRigidBody = GetComponent<Rigidbody2D>();
         playerTransform = FindObjectOfType<PlayerController>().transform;
-        gameSceneController = FindObjectOfType<GameSceneController>();
         //enemyAnimatorController = GetComponent<Animator>();
     }
 
+   
     // Update is called once per frame
     void Update()
     {
@@ -43,8 +45,31 @@ public class EnemyController : MonoBehaviour
     private void FixedUpdate()
     {
         EnemyFollowsPlayer();
-
     }
+
+
+    //apply duration penalty (damage) on the shield
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("Shield"))
+        {
+            Debug.Log("APPLY DAMAGE TO SHIELD ");
+            ShieldBroker.CallShieldTookDamage(shieldDamage);
+            Destroy(gameObject);
+        }
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log(collision.gameObject.tag);
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("APPLY DAMAGE TO PLAYER");
+        }
+    }
+
 
     private void EnemyFollowsPlayer()
     {

@@ -47,12 +47,7 @@ public class GameSceneController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    
+   
     private IEnumerator SpawnEnemies()
     {
         WaitForSeconds wait = new WaitForSeconds(level + enemySpawnDelay);
