@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
             {
                 PlayerTookDamage(enemyCollisionDamageValue);
             }
-
+            //BLABLABLA
           //  PlayerTakesDamage(50);
             Destroy(collision.gameObject);
         }
