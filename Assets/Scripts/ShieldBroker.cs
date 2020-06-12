@@ -10,6 +10,8 @@ public class ShieldBroker
 
     public static event Action<float> ShieldTookDamage;
 
+    public static event Action ShieldIsDepleted;
+
     public static void CallShieldIsEnabled()
     {
         if(ShieldIsEnabled != null)
@@ -26,11 +28,11 @@ public class ShieldBroker
         }
     }
 
-    public static void CallShieldIsBurning(float damageValue)
+    public static void CallShieldIsBurning(float timeLeft)
     {
         if(ShieldIsBurning != null)
         {
-            ShieldIsBurning(damageValue);
+            ShieldIsBurning(timeLeft);
         }
     }
 
@@ -39,6 +41,14 @@ public class ShieldBroker
         if(ShieldTookDamage != null)
         {
             ShieldTookDamage(damageValue);
+        }
+    }
+
+    public static void CallShieldIsDepleted()
+    {
+        if (ShieldIsDepleted != null)
+        {
+            ShieldIsDepleted();
         }
     }
 }

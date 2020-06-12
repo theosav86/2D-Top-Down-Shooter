@@ -108,6 +108,7 @@ public class ShieldController : MonoBehaviour
             //What to do when shield time is depleted
             isShieldActive = false;
             DisableShield();
+            ShieldBroker.CallShieldIsDepleted();
         }
     }
     private void ShieldBroker_ShieldTookDamage(float damageValue)

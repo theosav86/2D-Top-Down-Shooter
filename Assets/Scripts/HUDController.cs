@@ -41,6 +41,9 @@ public class HUDController : MonoBehaviour
         //Subscribing to the Shield is Disabled Event.
         ShieldBroker.ShieldIsDisabled += ShieldBroker_ShieldIsDisabled;
 
+        //Subscribing to the Shield is Depleted Event.
+        ShieldBroker.ShieldIsDepleted += ShieldBroker_ShieldIsDepleted;
+
         //Subscribing to the reload weapon event in the ReloadWeapon broker class
         ReloadWeaponBroker.WeaponIsReloading += ReloadWeaponBroker_WeaponIsReloading;
 
@@ -70,6 +73,15 @@ public class HUDController : MonoBehaviour
 
     }
 
+    private void ShieldBroker_ShieldIsDepleted()
+    {
+        ShieldIsDepleted();
+    }
+
+    private void ShieldBroker_ShieldIsBurning(float timeLeft)
+    {
+        UpdateShield(timeLeft);
+    }
     private void ShieldBroker_ShieldIsDisabled()
     {
         //Toggle the Text to Off...
@@ -82,11 +94,6 @@ public class HUDController : MonoBehaviour
         //Toggle the Text to On
         playerShieldStatusText.text = "ON!";
         playerShieldStatusText.color = Color.red;
-    }
-
-    private void ShieldBroker_ShieldIsBurning(float damageValue)
-    {
-        UpdateShield(damageValue);
     }
 
     private void AmmoDisplayBroker_UpdateMagazinesOnHud(int magazinesLeft)
@@ -152,7 +159,7 @@ public class HUDController : MonoBehaviour
         //normalized value because the Gradient.evaluate goes from 0f - 1f but our health might be 25 or 100 or w/e.
         healthFillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
 
-
+        //maybe getting obsolete. bar is nicer than text
         healthText.text = "Health: " + damageValue.ToString("D3");
 
 
@@ -175,9 +182,18 @@ public class HUDController : MonoBehaviour
     private void UpdateShield(float shieldValue)
     {
         shieldSlider.value = shieldValue;
-           
-        //if I want I can create a shieldText but not really necessary
-      
+        //normalized value because the Gradient.evaluate goes from 0f - 1f but our health might be 25 or 100 or w/e.
+        shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
+    }
+
+    private void ShieldIsDepleted()
+    {
+            shieldSlider.value = 0f;
+            shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
+
+            //Change the on/off Text to Depleted
+            playerShieldStatusText.text = "Depleted!!!";
+            playerShieldStatusText.color = Color.red;
     }
      
 }
