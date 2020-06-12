@@ -11,7 +11,7 @@ public class HUDController : MonoBehaviour
     public Canvas canvas;
     public Gradient healthBarColorGradient;
     public Slider healthSlider;
-    public Image fillColorImage;
+    public Image healthFillColorImage;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI playerHealthStatusText; //Healthy., In Business..., Critical !!!
@@ -34,7 +34,7 @@ public class HUDController : MonoBehaviour
         //Initialize the HUD SLIDER with color and value and lastly the health status text. Stupid stuff right here
         playerHealthStatusText.text = "Healthy.";
         healthSlider.maxValue = 100;
-        fillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
+        healthFillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
 
         //Reference to GameSceneController in order to subscribe to its events
         gameSceneController = FindObjectOfType<GameSceneController>();
@@ -108,7 +108,7 @@ public class HUDController : MonoBehaviour
         healthSlider.value = damageValue;
 
         //normalized value because the Gradient.evaluate goes from 0f - 1f but our health might be 25 or 100 or w/e.
-        fillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
+        healthFillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
 
 
         healthText.text = "Health: " + damageValue.ToString("D3");
@@ -128,4 +128,15 @@ public class HUDController : MonoBehaviour
             playerHealthStatusText.text = "In Busines...";
         }
     }
+
+    /* need to create an UpdateShield Method
+     * 
+     * private void UpdateShield(int shieldValue)
+     * {
+     *      shieldFillColorImage.value = shieldValue;
+     *      
+     *      //if I want I can create a shieldText but not really necessary
+     * 
+        }
+     */
 }
