@@ -10,7 +10,7 @@ public delegate void PlayerTookDamageHandler(int damageValue);
 public class PlayerController : MonoBehaviour
 {
     //Player Stats. Actually make a PlayerStats class
-    public float playerMoveSpeed = 7f;
+    //public float playerMoveSpeed = 7f;
 
     //private variables
     private Rigidbody2D playerRigidbody;
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerStats = GetComponent<PlayerStats>();
-        selectedWeapon = GetComponentInChildren<SelectedWeaponController>(); // so we have access in variable firePoint for example
+        selectedWeapon = GetComponentInChildren<SelectedWeaponController>(); // so we have access in variable firePoint for example. I AM NOT USING THIS ONE. MAYBE DELETE IT .
         gameSceneController = FindObjectOfType<GameSceneController>();
     }
     // Start is called before the first frame update
@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        playerRigidbody.MovePosition(playerRigidbody.position + axisInput * playerMoveSpeed * Time.fixedDeltaTime);
+        playerRigidbody.MovePosition(playerRigidbody.position + axisInput * playerStats.playerMoveSpeed * Time.fixedDeltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -61,8 +61,8 @@ public class PlayerController : MonoBehaviour
             {
                 PlayerTookDamage(enemyCollisionDamageValue);
             }
-            //BLABLABLA
-          //  PlayerTakesDamage(50);
+            
+            //  PlayerTakesDamage(50);
             Destroy(collision.gameObject);
         }
     }

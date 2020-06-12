@@ -30,10 +30,12 @@ public class ShieldController : MonoBehaviour
         shieldCollider = GetComponent<BoxCollider2D>();
         shieldAnimator = GetComponent<Animator>();
     }
+
     // Start is called before the first frame update
     void Start()
     {
         DisableShield();
+
         ShieldBroker.CallShieldIsDisabled();
 
         ShieldBroker.ShieldTookDamage += ShieldBroker_ShieldTookDamage;
@@ -103,6 +105,7 @@ public class ShieldController : MonoBehaviour
         }
         else
         {
+            //What to do when shield time is depleted
             isShieldActive = false;
             DisableShield();
         }

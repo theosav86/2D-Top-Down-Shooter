@@ -18,6 +18,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField]
     private bool isImmortal = true;
 
+    public float playerMoveSpeed = 7f;
 
     private PlayerController playerController;
 

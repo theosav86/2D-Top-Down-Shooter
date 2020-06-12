@@ -62,7 +62,7 @@ public class GameSceneController : MonoBehaviour
 
             //create an instance of an enemy on random enemy spawn position
             EnemyController enemy = Instantiate(enemyPrefab, randomEnemySpawnPosition.position, Quaternion.identity);
-            enemy.gameObject.layer = LayerMask.NameToLayer("Enemy");
+           // enemy.gameObject.layer = LayerMask.NameToLayer("Enemy");
 
             // enemy.shotSpeed = currentLevel.enemyShotSpeed;
             // enemy.speed = currentLevel.enemySpeed;

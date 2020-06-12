@@ -100,6 +100,9 @@ public class EnemyController : MonoBehaviour
             EnemyKilled(pointValue); //EnemyKilled event invokation
         }
 
+        //The effect has a self destruct script. Otherwise I would have to destroy it here after instatiate.
+        GameObject enemyExplosionEffect = Instantiate(enemyExplosion, transform.position, Quaternion.identity);
+
         //Debug.Log("Enemy Destroyed");
         //enemyAnimatorController.SetTrigger("enemyDied");
         Destroy(gameObject);

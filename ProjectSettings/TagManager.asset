@@ -8,6 +8,9 @@ TagManager:
   - Red
   - RocketRadiusImage
   - Shield
+  - Green
+  - Blue
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -19,17 +22,17 @@ TagManager:
   - 
   - Floor
   - 
-  - Player
-  - 
-  - Enemy
-  - 
-  - 
   - Wall
   - 
   - 
   - 
   - 
+  - Enemy
   - 
+  - 
+  - 
+  - 
+  - Player
   - 
   - 
   - 
