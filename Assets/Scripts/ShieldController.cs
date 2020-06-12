@@ -64,8 +64,6 @@ public class ShieldController : MonoBehaviour
         if (isShieldActive)
         {
             ShieldTimeBurning();
-
-            ShieldBroker.CallShieldIsBurning();
         }
     }
 
@@ -102,6 +100,8 @@ public class ShieldController : MonoBehaviour
         if (shieldTimeLeft > 0)
         {
             shieldTimeLeft -= Time.deltaTime;
+
+            ShieldBroker.CallShieldIsBurning(shieldTimeLeft);
         }
         else
         {

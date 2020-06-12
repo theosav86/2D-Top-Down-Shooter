@@ -6,7 +6,7 @@ public class ShieldBroker
 
     public static event Action ShieldIsDisabled;
 
-    public static event Action ShieldIsBurning;
+    public static event Action<float> ShieldIsBurning;
 
     public static event Action<float> ShieldTookDamage;
 
@@ -26,11 +26,11 @@ public class ShieldBroker
         }
     }
 
-    public static void CallShieldIsBurning()
+    public static void CallShieldIsBurning(float damageValue)
     {
         if(ShieldIsBurning != null)
         {
-            ShieldIsBurning();
+            ShieldIsBurning(damageValue);
         }
     }
 

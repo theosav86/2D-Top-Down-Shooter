@@ -6,22 +6,41 @@ using TMPro;
 
 public class HUDController : MonoBehaviour
 {
+    #region Variables
     private GameSceneController gameSceneController;
 
     public Canvas canvas;
     public Gradient healthBarColorGradient;
+    public Gradient shieldBarColorGradient;
     public Slider healthSlider;
-    public Image healthFillColorImage;
+    public Slider shieldSlider;
     public TextMeshProUGUI healthText;
+    public TextMeshProUGUI playerShieldStatusText; // ON / OFF
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI playerHealthStatusText; //Healthy., In Business..., Critical !!!
     public TextMeshProUGUI reloadingText;
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI magazinesLeftText;
 
+    public Image healthFillColorImage;
+    public Image shieldFillColorImage;
+    #endregion
+
     // Start is called before the first frame update
     void Start()
     {
+        //Actually Create HealthBroker for sure!
+        //PlayerHealthBroker.playertookdamage etc.
+
+        //Subscribing to the Shield is Draining Event.
+        ShieldBroker.ShieldIsBurning += ShieldBroker_ShieldIsBurning;
+
+        //Subscribing to the Shield is Enabled Event.
+        ShieldBroker.ShieldIsEnabled += ShieldBroker_ShieldIsEnabled;
+
+        //Subscribing to the Shield is Disabled Event.
+        ShieldBroker.ShieldIsDisabled += ShieldBroker_ShieldIsDisabled;
+
         //Subscribing to the reload weapon event in the ReloadWeapon broker class
         ReloadWeaponBroker.WeaponIsReloading += ReloadWeaponBroker_WeaponIsReloading;
 
@@ -36,6 +55,11 @@ public class HUDController : MonoBehaviour
         healthSlider.maxValue = 100;
         healthFillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
 
+        //Initialize the HUD SHIELD SLIDER with color and value and lastly the shield status text. Are you sure it was stupid? I think it works ok now.
+        playerShieldStatusText.text = "OFF...";
+        healthSlider.maxValue = 100;
+        shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
+
         //Reference to GameSceneController in order to subscribe to its events
         gameSceneController = FindObjectOfType<GameSceneController>();
 
@@ -46,7 +70,25 @@ public class HUDController : MonoBehaviour
 
     }
 
-    
+    private void ShieldBroker_ShieldIsDisabled()
+    {
+        //Toggle the Text to Off...
+        playerShieldStatusText.text = "OFF...";
+        playerShieldStatusText.color = Color.black;
+    }
+
+    private void ShieldBroker_ShieldIsEnabled()
+    {
+        //Toggle the Text to On
+        playerShieldStatusText.text = "ON!";
+        playerShieldStatusText.color = Color.red;
+    }
+
+    private void ShieldBroker_ShieldIsBurning(float damageValue)
+    {
+        UpdateShield(damageValue);
+    }
+
     private void AmmoDisplayBroker_UpdateMagazinesOnHud(int magazinesLeft)
     {
         magazinesLeftText.text = "Magazines Left " + magazinesLeft;
@@ -129,14 +171,13 @@ public class HUDController : MonoBehaviour
         }
     }
 
-    /* need to create an UpdateShield Method
-     * 
-     * private void UpdateShield(int shieldValue)
-     * {
-     *      shieldFillColorImage.value = shieldValue;
-     *      
-     *      //if I want I can create a shieldText but not really necessary
-     * 
-        }
-     */
+      
+    private void UpdateShield(float shieldValue)
+    {
+        shieldSlider.value = shieldValue;
+           
+        //if I want I can create a shieldText but not really necessary
+      
+    }
+     
 }
