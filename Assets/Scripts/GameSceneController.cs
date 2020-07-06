@@ -80,6 +80,8 @@ public class GameSceneController : MonoBehaviour
     //method generated from the subscription to the event EnemyKilled
     private void Enemy_EnemyKilled(int pointValue)
     {
+
+        //add point value to HUD
         currentScore += pointValue;
 
         if(UpdateScoreOnKill != null)
