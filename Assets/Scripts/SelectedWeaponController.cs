@@ -45,7 +45,5 @@ public class SelectedWeaponController : MonoBehaviour
                 weapons[1].SetActive(false);
         }
 
-    }
-        
-        
+    }        
 }

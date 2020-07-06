@@ -8,6 +8,7 @@ public class AmmoDisplayBroker
 
     public static event Action CriticalAmmoOnHUD; // if current ammo in magazine = 1/3 * Total magazine capacity then make the numbers RED on hud. // The rocket launcher invokes the event when total rockets is less than 3.
 
+    
     public static void CallUpdateAmmoOnHud(int ammoInMagazineValue, int magazineSize)
     {
         if(UpdateAmmoOnHud != null)

@@ -8,6 +8,17 @@ public class RocketLauncherController : SelectedWeaponController
     public GameObject RocketRadiusImage;
     public GameObject rocket;
 
+    private AudioSource rocketSound;
+
+    [SerializeField]
+    private AudioClip rocketShotClip;
+
+    [SerializeField]
+    private AudioClip rocketEmptyClip;
+
+    [SerializeField]
+    private AudioClip rocketReloadClip;
+
     private int totalRockets = 10;
     [SerializeField]
     private float rocketForce = 2f;
@@ -32,6 +43,8 @@ public class RocketLauncherController : SelectedWeaponController
     // Start is called before the first frame update
     void Start()
     {
+        rocketSound = GetComponent<AudioSource>();
+
         rocketsInMagazine = 1;
         //Update bullet count and total rockets on HUD
         AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine);
@@ -47,11 +60,14 @@ public class RocketLauncherController : SelectedWeaponController
            // mouseAimLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);//make the rocket travel to the mouse point when fired in order to create an OverlapCircle and damage enemies in AOE.
            // DrawRocketImpactPosition(mouseAimLocation);
         }
-        if(gameObject.activeSelf && launcherIsReloading == false && Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.LeftControl))
         {
-            Debug.Log("RELOADING LAUNCHER YOU PRESSED R");
-            launcherIsReloading = true;
-            StartCoroutine(reloadRocket());
+            if (gameObject.activeSelf && launcherIsReloading == false)
+            {
+                Debug.Log("RELOADING LAUNCHER YOU PRESSED R");
+                launcherIsReloading = true;
+                StartCoroutine(reloadRocket());
+            }
         }
     }
 
@@ -60,6 +76,9 @@ public class RocketLauncherController : SelectedWeaponController
     {
         if (rocketsInMagazine > 0 && launcherIsReloading == false)
         {
+            //Play Sound of rocket launcher shooting
+            rocketSound.PlayOneShot(rocketShotClip);
+
             //Instantiate the Rocket prefab at the firepoint's gameObject position
             GameObject rocketPrefab = Instantiate(rocket, firePoint.position, firePoint.rotation);
             Rigidbody2D rocketRigidbody = rocketPrefab.GetComponent<Rigidbody2D>();
@@ -74,6 +93,10 @@ public class RocketLauncherController : SelectedWeaponController
             //Update bullet count on HUD
             AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine); //totalRockets used to be "rocketsInMagazine". Because now the HUD shows 1/10 instead of 1/1 in the ammo counter. But it turns red on critical ammo. Which to keep?
         }
+        else
+        {
+            rocketSound.PlayOneShot(rocketEmptyClip);
+        }
     }
     private void OnDisable()
     {
@@ -85,6 +108,10 @@ public class RocketLauncherController : SelectedWeaponController
     {
         if (totalRockets > 0)
         {
+
+            // Play Sound of rocket launcher reloading
+            rocketSound.PlayOneShot(rocketReloadClip);
+
             //call brokers method weapon is reloading
             ReloadWeaponBroker.CallWeaponIsReloading();
 
@@ -99,18 +126,15 @@ public class RocketLauncherController : SelectedWeaponController
             AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalRockets);
 
             Debug.LogError("ROCKET LAUNCHER RELOADED");
+
+            ReloadWeaponBroker.CallWeaponFinishedReloading();
         }
         else
         {
             Debug.Log("NO AMMO LEFT. RUN !!!");
+
+            ReloadWeaponBroker.CallWeaponFinishedReloading();
+
         }
     }
-
-    /*private void DrawRocketImpactPosition(Vector3 impactPosition)
-    {
-        if (GameObject.FindGameObjectWithTag("RocketRadiusImage") == null)
-        { 
-            GameObject rocketImpactObject = Instantiate(RocketRadiusImage, impactPosition, Quaternion.identity);
-        }
-    }*/
 }

@@ -33,9 +33,7 @@ public class PlayerStats : MonoBehaviour
         else
         {
             playerCurrentHealth = playerMaxHealth;
-            
         }
-
 
         playerController = GetComponent<PlayerController>();
         playerController.PlayerTookDamage += PlayerController_PlayerTookDamage; //PlayerController Class subscribes to the event PlayerTookDamage

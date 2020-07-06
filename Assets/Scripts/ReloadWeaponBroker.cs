@@ -8,6 +8,8 @@ public class ReloadWeaponBroker
 {
     public static event Action WeaponIsReloading;
 
+    public static event Action WeaponFinishedReloading;
+
     public static void CallWeaponIsReloading()
     {
         if(WeaponIsReloading != null)
@@ -15,4 +17,12 @@ public class ReloadWeaponBroker
             WeaponIsReloading();
         }
     }
+    public static void CallWeaponFinishedReloading()
+    {
+        if (WeaponIsReloading != null)
+        {
+            WeaponFinishedReloading();
+        }
+    }
+
 }

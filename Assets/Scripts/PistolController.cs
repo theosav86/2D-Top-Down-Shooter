@@ -1,14 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PistolController : SelectedWeaponController
 {
 
     public GameObject bullet; //visible in the Inspector to place the bullet prefab itself.
 
+    private AudioSource pistolSound;
 
-    
+    [SerializeField]
+    private AudioClip pistolShotClip;
+
+    [SerializeField]
+    private AudioClip pistolEmptyClip;
+
+    [SerializeField]
+    private AudioClip pistolReloadClip;
+
+
     [SerializeField]
     private const int pistolRange = 20;
 
@@ -41,6 +52,8 @@ public class PistolController : SelectedWeaponController
     // Start is called before the first frame update
     void Start()
     {
+        pistolSound = GetComponent<AudioSource>();
+
         bulletsInMagazine = magazineSize;
 
         //Update ammo and magazine count on HUD
@@ -53,13 +66,16 @@ public class PistolController : SelectedWeaponController
     {
         if (Input.GetMouseButtonDown(0) && gameObject.activeSelf && pistolIsReloading == false)
         {
-             ShootPistol();
+            ShootPistol();
         }
-        if (gameObject.activeSelf && pistolIsReloading == false && Input.GetKeyDown(KeyCode.R))
-        {
-            Debug.Log("RELOADING PISTOL YOU PRESSED R");
-            pistolIsReloading = true;
-            StartCoroutine(ChangeMagazine());
+        if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.LeftControl))
+        { 
+            if (gameObject.activeSelf && pistolIsReloading == false)
+            {
+                Debug.Log("RELOADING PISTOL YOU PRESSED R");
+                pistolIsReloading = true;
+                StartCoroutine(ChangeMagazine());
+            }
         }
     }
 
@@ -75,6 +91,10 @@ public class PistolController : SelectedWeaponController
        
         if (bulletsInMagazine > 0)
         {
+
+            //Play Pistol Shooting Sound
+            pistolSound.PlayOneShot(pistolShotClip);
+
             //remove 1 bullet from the magazine
             bulletsInMagazine--;
 
@@ -93,15 +113,21 @@ public class PistolController : SelectedWeaponController
         else
         {
             //WEAPON EMPTY SOUND
+            pistolSound.PlayOneShot(pistolEmptyClip);
         }
     }
 
+
+    
     private IEnumerator ChangeMagazine()
     {
         //yield return new WaitForSeconds(reloadSpeed);
 
         if (totalMagazines > 0)
         {
+            //Pistol reload SOUND
+            pistolSound.PlayOneShot(pistolReloadClip);
+
             //Update the HUD to notify the player that the gun is reloading
             ReloadWeaponBroker.CallWeaponIsReloading();
 
@@ -116,10 +142,16 @@ public class PistolController : SelectedWeaponController
             AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, magazineSize);
             AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
 
+            ReloadWeaponBroker.CallWeaponFinishedReloading();
+
         }
         else
         {
             Debug.Log("NO AMMO LEFT. RUN !!!");
+
+            ReloadWeaponBroker.CallWeaponFinishedReloading();
         }
     }
+
+
 }

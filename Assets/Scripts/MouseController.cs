@@ -37,8 +37,9 @@ public class MouseController : MonoBehaviour
     void Update()
     {
         //Position of the mouse cursor Vector 2
-        mousePosition = sceneMainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z - sceneMainCamera.transform.position.z));//position of the camera Input mousePosition
-
+        //position of the camera Input mousePosition
+        mousePosition = sceneMainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z - sceneMainCamera.transform.position.z));
+        
         //Check if the player is aiming
         if (Input.GetMouseButtonDown(1))
         {
@@ -71,10 +72,8 @@ public class MouseController : MonoBehaviour
        
     }
 
-       
     private void AimSelectedWeapon()
     {
-        
+
     }
-   
 }

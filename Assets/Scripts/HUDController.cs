@@ -47,6 +47,9 @@ public class HUDController : MonoBehaviour
         //Subscribing to the reload weapon event in the ReloadWeapon broker class
         ReloadWeaponBroker.WeaponIsReloading += ReloadWeaponBroker_WeaponIsReloading;
 
+        //Subscribing to the reload weapon Finished event in the ReloadWeapon broker class
+        ReloadWeaponBroker.WeaponFinishedReloading += ReloadWeaponBroker_WeaponFinishedReloading;
+
         //Subscribing to the ammo update event in the AmmoDisplay broker class
         AmmoDisplayBroker.UpdateAmmoOnHud += AmmoDisplayBroker_UpdateAmmoOnHud;
 
@@ -72,6 +75,7 @@ public class HUDController : MonoBehaviour
         gameSceneController.UpdateHealthOnDamage += GameSceneController_UpdateHealthOnDamage;
 
     }
+
 
     private void ShieldBroker_ShieldIsDepleted()
     {
@@ -124,7 +128,11 @@ public class HUDController : MonoBehaviour
 
     private void ReloadWeaponBroker_WeaponIsReloading()
     {
-        reloadingText.GetComponent<Animator>().SetTrigger("PlayReload");
+        reloadingText.GetComponent<Animator>().SetBool("PlayReload", true);
+    }
+    private void ReloadWeaponBroker_WeaponFinishedReloading()
+    {
+        reloadingText.GetComponent<Animator>().SetBool("PlayReload", false);
     }
 
     private void GameSceneController_UpdateHealthOnDamage(int damageValue)

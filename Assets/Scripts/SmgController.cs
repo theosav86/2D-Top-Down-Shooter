@@ -6,10 +6,19 @@ using System;
 public class SmgController : SelectedWeaponController
 {
 
+    private AudioSource smgSound;
+
+    [SerializeField]
+    private AudioClip smgShotClip;
+    [SerializeField]
+    private AudioClip smgEmptyClip;
+    [SerializeField]
+    private AudioClip smgReloadClip;
+
     private int smgDamage = 30;
     private float smgRange = 5f;
     [SerializeField]
-    private float smgReloadSpeed = 3f;
+    private float smgReloadSpeed = 2.5f;
     private float nextShotTime;
     [SerializeField]
     private float rateOfFire = 13f;
@@ -18,6 +27,8 @@ public class SmgController : SelectedWeaponController
     private int bulletsInMagazine = 30;
     private int totalMagazines = 5;
     private bool smgIsReloading;
+    //[SerializeField]
+    //private LineRenderer lineRenderer;
 
 
     private void OnEnable()
@@ -26,12 +37,14 @@ public class SmgController : SelectedWeaponController
         smgIsReloading = false;
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, smgMagazineSize);
         AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
-        
+
+      //lineRenderer = GetComponent<LineRenderer>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        smgSound = GetComponent<AudioSource>();
 
         //set initial bullets in magazine
         bulletsInMagazine = smgMagazineSize;
@@ -56,13 +69,15 @@ public class SmgController : SelectedWeaponController
             }
             
         }
-
-        //check if the player is pressing R to reload. If the weapon isn't already reloading the following is executed
-        if(gameObject.activeSelf && smgIsReloading == false && Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.LeftControl))
         {
-            Debug.Log("RELOADING SMG YOU PRESSED R");
-            smgIsReloading = true;
-            StartCoroutine(ChangeMagazine());
+            //check if the player is pressing R/ctrl to reload. If the weapon isn't already reloading the following is executed
+            if (gameObject.activeSelf && smgIsReloading == false)
+            {
+                Debug.Log("RELOADING SMG YOU PRESSED R");
+                smgIsReloading = true;
+                StartCoroutine(ChangeMagazine());
+            }
         }
     }
 
@@ -78,8 +93,14 @@ public class SmgController : SelectedWeaponController
         if (bulletsInMagazine > 0)
         {
 
+            //play smg shot sound
+            smgSound.PlayOneShot(smgShotClip);
+
+
             //SHOOT
             RaycastHit2D smgHit = Physics2D.Raycast(firePoint.position, firePoint.right, smgRange);
+            //lineRenderer.SetPosition(0,firePoint.position);
+            //lineRenderer.SetPosition(1,firePoint.right * smgRange);
             bulletsInMagazine--;
 
             //Update bullet count on HUD
@@ -99,6 +120,7 @@ public class SmgController : SelectedWeaponController
         else
         {
             //PLAY EMPTY GUN SOUND CLICK CLICK CLICK
+            smgSound.PlayOneShot(smgEmptyClip);
         }
 
        
@@ -114,6 +136,9 @@ public class SmgController : SelectedWeaponController
             //call the method in the broker to invoke the reload event for the hud controller
             ReloadWeaponBroker.CallWeaponIsReloading();
 
+            //Play Reload Sound
+            smgSound.PlayOneShot(smgReloadClip);
+
             yield return new WaitForSecondsRealtime(smgReloadSpeed);
             totalMagazines--;
             smgIsReloading = false;
@@ -124,10 +149,14 @@ public class SmgController : SelectedWeaponController
             AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
 
             Debug.LogError("SMG RELOADED");
+
+            ReloadWeaponBroker.CallWeaponFinishedReloading();
         }
         else
         {
             Debug.LogError("SMG OUT OF AMMO");
+
+            ReloadWeaponBroker.CallWeaponFinishedReloading();
         }
     }
 
