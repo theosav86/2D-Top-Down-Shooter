@@ -6,6 +6,8 @@ using UnityEngine.Audio;
 public class PistolController : SelectedWeaponController
 {
 
+    #region Variables
+
     public GameObject bullet; //visible in the Inspector to place the bullet prefab itself.
 
     private AudioSource pistolSound;
@@ -26,6 +28,7 @@ public class PistolController : SelectedWeaponController
     private int totalMagazines = 10;
 
     private int magazineSize = 12;
+
     [SerializeField]
     private float pistolReloadSpeed = 1.5f; //in seconds
    
@@ -38,7 +41,7 @@ public class PistolController : SelectedWeaponController
     
     private int bulletsInMagazine = 12;
 
-   
+    #endregion
 
     private void OnEnable()
     {   //if player interrupted the reload this is a check to see if the gun had bullets inside the magazine.
@@ -121,7 +124,6 @@ public class PistolController : SelectedWeaponController
     
     private IEnumerator ChangeMagazine()
     {
-        //yield return new WaitForSeconds(reloadSpeed);
 
         if (totalMagazines > 0)
         {

@@ -1,6 +1,18 @@
-﻿using System.Collections;
+﻿/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+
+
+//ANOTHER ENEMY TYPE CLASS NOT YET IMPLEMENTED (DIAMONT ENEMY).
+
+//ENEMY SHOULD MOVE INSIDE THE STAGE AND STOP TO SHOOT A PROJECTILE TOWARDS THE PLAYER.
+
+
+
+
+
+
 
 public class DiamontEnemyController : MonoBehaviour
 {
@@ -78,6 +90,7 @@ public class DiamontEnemyController : MonoBehaviour
         GameObject bulletPrefab = Instantiate(enemyBullet, transform.position, transform.rotation);
         Rigidbody2D bulletRigidbody = bulletPrefab.GetComponent<Rigidbody2D>();
         bulletRigidbody.AddForce(firePoint.right * bulletForce, ForceMode2D.Impulse);
-    }*/
+    } 
 }
 
+*/

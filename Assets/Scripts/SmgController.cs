@@ -6,10 +6,10 @@ using System;
 public class SmgController : SelectedWeaponController
 {
 
-    private AudioSource smgSound;
+    private AudioSource smgSound; //Audio Souce Component
 
-    [SerializeField]
-    private AudioClip smgShotClip;
+   // [SerializeField]
+    public AudioClip smgShotClip;
     [SerializeField]
     private AudioClip smgEmptyClip;
     [SerializeField]

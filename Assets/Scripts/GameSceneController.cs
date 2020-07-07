@@ -47,7 +47,7 @@ public class GameSceneController : MonoBehaviour
         }
     }
 
-   
+   //Coroutine that spawns enemies
     private IEnumerator SpawnEnemies()
     {
         WaitForSeconds wait = new WaitForSeconds(level + enemySpawnDelay);

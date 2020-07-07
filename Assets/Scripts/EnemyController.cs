@@ -62,7 +62,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.tag);
+        Debug.Log("Enemy hit " + collision.gameObject.tag);
 
         if (collision.gameObject.CompareTag("Player"))
         {
