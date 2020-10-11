@@ -38,7 +38,7 @@ public class PistolBulletController : MonoBehaviour
                 ProjectileHitEnemy(); //Invoke the event.  We type it as if it was a method, with () at the end.
             }
             //apply damage
-            collision.gameObject.GetComponent<EnemyController>().TakeDamage(pistolBulletDamage);
+            collision.gameObject.GetComponent<Enemy>().TakeDamage(pistolBulletDamage);
 
             //APPLY KNOCKBACK EFFECT
            // collision.gameObject.GetComponent<Rigidbody2D>().velocity =  //AddForce(gameObject.transform.forward * bulletForce * 100, ForceMode2D.Impulse);

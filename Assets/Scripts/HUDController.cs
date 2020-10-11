@@ -17,6 +17,7 @@ public class HUDController : MonoBehaviour
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI playerShieldStatusText; // ON / OFF
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI scrapText;
     public TextMeshProUGUI playerHealthStatusText; //Healthy., In Business..., Critical !!!
     public TextMeshProUGUI reloadingText;
     public TextMeshProUGUI ammoText;
@@ -56,12 +57,12 @@ public class HUDController : MonoBehaviour
         //Subscribing to the Magazines update event in the AmmoDisplay broker class
         AmmoDisplayBroker.UpdateMagazinesOnHud += AmmoDisplayBroker_UpdateMagazinesOnHud;
 
-        //Initialize the HUD SLIDER with color and value and lastly the health status text. Stupid stuff right here
+        //Initialize the HUD SLIDER with color and value and lastly the health status text.
         playerHealthStatusText.text = "Healthy.";
         healthSlider.maxValue = 100;
         healthFillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
 
-        //Initialize the HUD SHIELD SLIDER with color and value and lastly the shield status text. Are you sure it was stupid? I think it works ok now.
+        //Initialize the HUD SHIELD SLIDER with color and value and lastly the shield status text.
         playerShieldStatusText.text = "OFF...";
         healthSlider.maxValue = 100;
         shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
@@ -140,9 +141,9 @@ public class HUDController : MonoBehaviour
         UpdateHealth(damageValue);
     }
 
-    private void GameSceneController_UpdateScoreOnKill(int pointValue)
+    private void GameSceneController_UpdateScoreOnKill(int pointValue, int scrapValue)
     {
-        UpdateScore(pointValue);
+        UpdateScore(pointValue, scrapValue);
     }
 
     // Update is called once per frame
@@ -153,9 +154,10 @@ public class HUDController : MonoBehaviour
 
 
     //method to update the score WHEN an enemy is killed
-    private void UpdateScore(int pointValue)
+    private void UpdateScore(int pointValue, int scrapValue)
     {
         scoreText.text = "Score: " + pointValue.ToString("D6");
+        scrapText.text = "Scrap: " + scrapValue.ToString("D4");
     
     }
 
@@ -171,7 +173,7 @@ public class HUDController : MonoBehaviour
         healthText.text = "Health: " + damageValue.ToString("D3");
 
 
-        //UPDATE THE HUD SLIDER TEXT. STUPID STUFF RIGHT HERE AS WELL!!!
+        //UPDATE THE HUD SLIDER TEXT.
         if (damageValue > 70)
         {
             playerHealthStatusText.text = "Healthy.";

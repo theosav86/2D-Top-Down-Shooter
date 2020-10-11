@@ -20,16 +20,17 @@ public class GameSceneController : MonoBehaviour
     private float enemySpawnDelay = 0.5f;
 
     private int currentScore = 0;
+    private int currentScrap = 0;
     private int currentHealth = 100;
-    public EnemyController enemyPrefab;
+    public StalkerController stalkerEnemyPrefab;
 
+    [SerializeField]
     private PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
     {
-      
-        playerController = FindObjectOfType<PlayerController>();
+        //playerController = FindObjectOfType<PlayerController>();
         playerController.PlayerTookDamage += PlayerController_PlayerTookDamage;
  
         //Start spawning of enemies
@@ -61,7 +62,7 @@ public class GameSceneController : MonoBehaviour
             Transform randomEnemySpawnPosition = enemySpawnPoints[selectedRandomSpawnPoint];
 
             //create an instance of an enemy on random enemy spawn position
-            EnemyController enemy = Instantiate(enemyPrefab, randomEnemySpawnPosition.position, Quaternion.identity);
+            StalkerController enemy = Instantiate(stalkerEnemyPrefab, randomEnemySpawnPosition.position, Quaternion.identity);
            // enemy.gameObject.layer = LayerMask.NameToLayer("Enemy");
 
             // enemy.shotSpeed = currentLevel.enemyShotSpeed;
@@ -78,15 +79,16 @@ public class GameSceneController : MonoBehaviour
 
 
     //method generated from the subscription to the event EnemyKilled
-    private void Enemy_EnemyKilled(int pointValue)
+    private void Enemy_EnemyKilled(int pointValue, int scrapValue)
     {
 
         //add point value to HUD
         currentScore += pointValue;
+        currentScrap += scrapValue;
 
         if(UpdateScoreOnKill != null)
         {
-            UpdateScoreOnKill(currentScore); //invoking new parameterized event UpdateScoreOnKill
+            UpdateScoreOnKill(currentScore, currentScrap); //invoking new parameterized event UpdateScoreOnKill
         }
     }
 }

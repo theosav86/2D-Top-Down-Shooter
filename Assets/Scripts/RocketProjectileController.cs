@@ -59,7 +59,7 @@ public class RocketProjectileController : MonoBehaviour
         {
             if(collider.CompareTag("Enemy"))
             {
-                collider.GetComponent<EnemyController>().TakeDamage(rocketDamage);
+                collider.GetComponent<Enemy>().TakeDamage(rocketDamage);
             }
         }
 
@@ -76,11 +76,11 @@ public class RocketProjectileController : MonoBehaviour
 
              //apply damage
             //Debug.Log("Rocket HIT ENEMY COLLIDER METHOD IN PROJECTILE");
-            collision.gameObject.GetComponent<EnemyController>().TakeDamage(rocketDamage);
+            collision.gameObject.GetComponent<Enemy>().TakeDamage(rocketDamage);
 
         }
 
-        //INSTANTIATE PISTOL BULLER EXPLOSION PARTICLES
+        //INSTANTIATE ROCKET BULLET EXPLOSION PARTICLES
         GameObject rocketExplosionEffect = Instantiate(rocketExplosion, transform.position, Quaternion.identity);//instantiate the particle or animation of bullet explosion on collision with anything.
 
         //Instead of Destroy(bulletExplosionEffect) I used a script on the particle called SelfDestruct

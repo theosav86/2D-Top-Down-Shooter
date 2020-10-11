@@ -1,4 +1,4 @@
-﻿/*using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,12 +10,12 @@ using UnityEngine;
 
 
 
-
-
-
-
-public class DiamontEnemyController : MonoBehaviour
+public class DiamontEnemyController : Enemy
 {
+    public Transform firePoint;
+    public LayerMask checkWallsLayer;
+    public LayerMask checkPlayerLayer;
+
     [SerializeField]
     private GameObject enemyBullet;
 
@@ -27,23 +27,25 @@ public class DiamontEnemyController : MonoBehaviour
 
     private float timeLeft = 2f;
 
-    private float timeBetweenShots = 2f;
-
     private Vector2 diamontMovement;
 
     private Rigidbody2D diamontRigidBody;
 
-    private bool patrolling;
+    private bool canShoot = true;
+    private float rateOfFire = 2f;
+    private float reloadSpeed = 3f;
+
+    private float checkRadius = 4f;
+
+    public float checkRange = 10f;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        patrolling = true;
+        //patrolling = true;
 
         diamontRigidBody = GetComponent<Rigidbody2D>();
-
-        StartCoroutine(MoveDiamont());
 
       //  StartCoroutine(MoveDiamont());
     }
@@ -53,13 +55,37 @@ public class DiamontEnemyController : MonoBehaviour
     {
         
     }
+
     private void FixedUpdate()
     {
      //   MoveDiamont();
     }
 
+   /* private void SetNextRandomPoint()
+    {
+      //  RaycastHit2D checkForNextPoint = Physics2D.Raycast(firePoint.position, transform.right, checkRange);
+       // if(checkForNextPoint.transform.CompareTag("Wall") )
+    }*/
 
-    private IEnumerator MoveDiamont()
+    private void CheckArea()
+    {
+        if(Physics2D.OverlapCircle(transform.position, checkRadius, checkPlayerLayer))
+        {
+            if(canShoot)
+            {
+                Instantiate(enemyBullet, firePoint.transform.position, Quaternion.identity);
+                canShoot = false;
+                Invoke(nameof(EnemyReload), reloadSpeed);
+            }
+        }
+    }
+
+    private void EnemyReload()
+    {
+        canShoot = true;
+    }
+
+    /*private IEnumerator MoveDiamont()
     {
         while (patrolling)
         {
@@ -80,7 +106,7 @@ public class DiamontEnemyController : MonoBehaviour
 
             Debug.Log(diamontRigidBody.position);
         }
-    }
+    }*/
 
    /* private IEnumerator DiamontShootsPlayer()
     {
@@ -90,7 +116,5 @@ public class DiamontEnemyController : MonoBehaviour
         GameObject bulletPrefab = Instantiate(enemyBullet, transform.position, transform.rotation);
         Rigidbody2D bulletRigidbody = bulletPrefab.GetComponent<Rigidbody2D>();
         bulletRigidbody.AddForce(firePoint.right * bulletForce, ForceMode2D.Impulse);
-    } 
+    } */
 }
-
-*/

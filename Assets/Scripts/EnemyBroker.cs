@@ -1,18 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class EnemyBroker : MonoBehaviour
+﻿using System;
+public class EnemyBroker
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static event Action<int, int> EnemyKilled;
 
-    // Update is called once per frame
-    void Update()
+    public void CallEnemyKilled(int pointValue, int scrapValue)
     {
-        
+        if(EnemyKilled != null)
+        {
+            EnemyKilled(pointValue, scrapValue);
+        }
     }
 }
