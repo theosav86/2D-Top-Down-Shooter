@@ -9,5 +9,8 @@ public class Levels : ScriptableObject
 
     public float spawnTimer;
 
+    public float chanceToSpawnStalker;
+    public float chanceToSpawnDiamond;
+
     public Enemy[] enemyTypes;
 }

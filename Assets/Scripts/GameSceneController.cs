@@ -22,7 +22,8 @@ public class GameSceneController : MonoBehaviour
     private int currentScore = 0;
     private int currentScrap = 0;
     private int currentHealth = 100;
-    public StalkerController stalkerEnemyPrefab;
+
+    public Transform[] diamontPatrolPoints;
 
     [SerializeField]
     private PlayerController playerController;
@@ -34,7 +35,7 @@ public class GameSceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        levelIndex = 0;
+        levelIndex = 1;
 
         playerController.PlayerTookDamage += PlayerController_PlayerTookDamage;
  
@@ -74,8 +75,10 @@ public class GameSceneController : MonoBehaviour
             //create an instance of an enemy on random enemy spawn position
         ////    StalkerController enemy = Instantiate(stalkerEnemyPrefab, randomEnemySpawnPosition.position, Quaternion.identity);
             // enemy.gameObject.layer = LayerMask.NameToLayer("Enemy");
-
+     //       Mathf.Clamp()
             Enemy enemy = Instantiate(levels[levelIndex].enemyTypes[Random.Range(0, levels[levelIndex].enemyTypes.Length)], randomEnemySpawnPosition.position, Quaternion.identity);
+
+            enemy.Initialize(diamontPatrolPoints);
 
             // enemy.shotSpeed = currentLevel.enemyShotSpeed;
             // enemy.speed = currentLevel.enemySpeed;

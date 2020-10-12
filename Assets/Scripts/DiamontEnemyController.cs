@@ -8,8 +8,6 @@ using UnityEngine;
 
 //ENEMY SHOULD MOVE INSIDE THE STAGE AND STOP TO SHOOT A PROJECTILE TOWARDS THE PLAYER.
 
-
-
 public class DiamontEnemyController : Enemy
 {
     #region Variables
@@ -26,7 +24,6 @@ public class DiamontEnemyController : Enemy
     private float diamontMoveSpeed = 2f;
 
     private float timeForNextStep = 2f;
-
 
     private Vector2 enemyDirection;
 
@@ -45,7 +42,7 @@ public class DiamontEnemyController : Enemy
 
     public float checkRange = 10f;
 
-    public Transform[] patrolPoints;
+    private Transform[] patrolPoints;
 
     private int patrolPointIndex = 0;
 
@@ -57,19 +54,33 @@ public class DiamontEnemyController : Enemy
 
     #endregion
 
+    public override void Initialize(Transform[] patrolPointsArray)
+    {
+        patrolPoints = new Transform[patrolPointsArray.Length];
+
+        for (int i = 0; i < patrolPointsArray.Length; i++)
+        {
+            patrolPoints[i] = patrolPointsArray[i];
+        }
+
+        FindStartingPatrolPoint();
+
+        SetNextDestination();
+    }
+
     private void Awake()
     {
         closestPoint = 100f;
 
         diamontRigidBody = GetComponent<Rigidbody2D>();
 
-        FindStartingPatrolPoint();
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        SetNextDestination();
+       
     }
 
 
@@ -81,6 +92,7 @@ public class DiamontEnemyController : Enemy
 
             if(Vector2.Distance(transform.position, patrolPoints[patrolPointIndex].position) < 0.1f)
             {
+          
                 SetNextDestination();
             }
         }
@@ -97,6 +109,7 @@ public class DiamontEnemyController : Enemy
         {
             if(Vector2.Distance(transform.position, patrolPoints[i].position) < closestPoint)
             {
+                closestPoint = Vector2.Distance(transform.position, patrolPoints[i].position);
                 patrolPointIndex = i;
             }
         }

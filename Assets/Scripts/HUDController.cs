@@ -64,7 +64,7 @@ public class HUDController : MonoBehaviour
 
         //Initialize the HUD SHIELD SLIDER with color and value and lastly the shield status text.
         playerShieldStatusText.text = "OFF...";
-        healthSlider.maxValue = 100;
+        shieldSlider.maxValue = 100;
         shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
 
         //Reference to GameSceneController in order to subscribe to its events
