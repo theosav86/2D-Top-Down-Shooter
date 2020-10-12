@@ -12,6 +12,8 @@ using UnityEngine;
 
 public class DiamontEnemyController : Enemy
 {
+    #region Variables
+
     public Transform firePoint;
     public LayerMask checkWallsLayer;
     public LayerMask checkPlayerLayer;
@@ -25,96 +27,158 @@ public class DiamontEnemyController : Enemy
 
     private float timeForNextStep = 2f;
 
-    private float timeLeft = 2f;
 
-    private Vector2 diamontMovement;
+    private Vector2 enemyDirection;
 
     private Rigidbody2D diamontRigidBody;
 
-    private bool canShoot = true;
-    private float rateOfFire = 2f;
-    private float reloadSpeed = 3f;
+    private bool isPatrolling = true;
+    private bool playerSpotted = false;
 
-    private float checkRadius = 4f;
+    private bool canShoot = true;
+
+    private float rateOfFire = 1f;
+
+    private float reloadSpeed = 1f;
+
+    private float checkRadius = 12f;
 
     public float checkRange = 10f;
 
+    public Transform[] patrolPoints;
+
+    private int patrolPointIndex = 0;
+
+    private float closestPoint = 100f;
+
+    private Transform playerTransform = null;
+
+    private float bulletForce = 0.3f;
+
+    #endregion
+
+    private void Awake()
+    {
+        closestPoint = 100f;
+
+        diamontRigidBody = GetComponent<Rigidbody2D>();
+
+        FindStartingPatrolPoint();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        //patrolling = true;
-
-        diamontRigidBody = GetComponent<Rigidbody2D>();
-
-      //  StartCoroutine(MoveDiamont());
+        SetNextDestination();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void FixedUpdate()
     {
-     //   MoveDiamont();
+        if(isPatrolling)
+        {
+            this.transform.position = Vector2.MoveTowards(transform.position, patrolPoints[patrolPointIndex].position, diamontMoveSpeed * Time.fixedDeltaTime);
+
+            if(Vector2.Distance(transform.position, patrolPoints[patrolPointIndex].position) < 0.1f)
+            {
+                SetNextDestination();
+            }
+        }
+
+        if (playerSpotted)
+        {
+            ShootPlayer();
+        }
     }
 
-   /* private void SetNextRandomPoint()
+    private void FindStartingPatrolPoint()
     {
-      //  RaycastHit2D checkForNextPoint = Physics2D.Raycast(firePoint.position, transform.right, checkRange);
-       // if(checkForNextPoint.transform.CompareTag("Wall") )
-    }*/
-
-    private void CheckArea()
-    {
-        if(Physics2D.OverlapCircle(transform.position, checkRadius, checkPlayerLayer))
+        for(int i = 0; i < patrolPoints.Length; i++)
         {
-            if(canShoot)
+            if(Vector2.Distance(transform.position, patrolPoints[i].position) < closestPoint)
             {
-                Instantiate(enemyBullet, firePoint.transform.position, Quaternion.identity);
-                canShoot = false;
-                Invoke(nameof(EnemyReload), reloadSpeed);
+                patrolPointIndex = i;
             }
         }
     }
 
+    private void SetNextDestination()
+    {
+        patrolPointIndex++;
+
+        if(patrolPointIndex >= patrolPoints.Length)
+        {
+            patrolPointIndex = 0;
+        }
+    }
+
+   
+
+   
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        PlayerController player = other.GetComponent<PlayerController>();
+
+        if(player != null)
+        {
+            playerTransform = other.transform;
+
+            //look at the player
+            enemyDirection = playerTransform.position - transform.position;
+            float angle = Mathf.Atan2(enemyDirection.y, enemyDirection.x) * Mathf.Rad2Deg;
+            diamontRigidBody.rotation = angle;
+
+            playerSpotted = true;
+            
+        }
+        else
+        {
+            playerSpotted = false;
+            playerTransform = null;
+        }
+    }
+
+    private void ShootPlayer()
+    {
+        if(playerSpotted && canShoot)
+        {
+            CheckArea();
+        }
+    }
+
+    private void CheckArea()
+    {
+        if (Physics2D.OverlapCircle(transform.position, checkRadius, checkPlayerLayer))
+        {
+            if (canShoot)
+            {
+                if(playerTransform != null)
+                {
+                    GameObject bullet = Instantiate(enemyBullet, firePoint.transform.position, firePoint.rotation);
+                    Rigidbody2D bulletRB = bullet.GetComponent<Rigidbody2D>();
+                    bulletRB.AddForce((playerTransform.position - this.transform.position) * bulletForce, ForceMode2D.Impulse);
+                }
+                
+                canShoot = false;
+                Invoke(nameof(EnemyReload), reloadSpeed);
+            }
+        }
+
+    }
     private void EnemyReload()
     {
         canShoot = true;
     }
 
-    /*private IEnumerator MoveDiamont()
-    {
-        while (patrolling)
-        {
-           // Ray diamontRay = new Ray(transform.position, transform.forward * Random.Range(-1, 1));
 
-            RaycastHit2D diamontHit;
+    /* private IEnumerator DiamontShootsPlayer()
+     {
+         yield return new WaitForSeconds(timeBetweenShots);
 
-            diamontHit = Physics2D.Raycast(transform.position, transform.forward * Random.Range(-1, 1));
-
-            if (diamontHit.collider.CompareTag("Wall"))
-            {
-                yield return new WaitForSeconds(timeForNextStep);
-            }
-            else
-                diamontRigidBody.MovePosition(diamontHit.point * Time.deltaTime * diamontMoveSpeed); //(new Vector2(transform.position.x + Random.Range(-1, 1), transform.position.y + Random.Range(-1, 1)));
-
-            yield return new WaitForSeconds(timeForNextStep);
-
-            Debug.Log(diamontRigidBody.position);
-        }
-    }*/
-
-   /* private IEnumerator DiamontShootsPlayer()
-    {
-        yield return new WaitForSeconds(timeBetweenShots);
-
-        //Instantiate the bullet prefab at the firepoint's gameObject position
-        GameObject bulletPrefab = Instantiate(enemyBullet, transform.position, transform.rotation);
-        Rigidbody2D bulletRigidbody = bulletPrefab.GetComponent<Rigidbody2D>();
-        bulletRigidbody.AddForce(firePoint.right * bulletForce, ForceMode2D.Impulse);
-    } */
+         //Instantiate the bullet prefab at the firepoint's gameObject position
+         GameObject bulletPrefab = Instantiate(enemyBullet, transform.position, transform.rotation);
+         Rigidbody2D bulletRigidbody = bulletPrefab.GetComponent<Rigidbody2D>();
+         bulletRigidbody.AddForce(firePoint.right * bulletForce, ForceMode2D.Impulse);
+     } */
 }

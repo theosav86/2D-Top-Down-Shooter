@@ -3,7 +3,7 @@ public class EnemyBroker
 {
     public static event Action<int, int> EnemyKilled;
 
-    public void CallEnemyKilled(int pointValue, int scrapValue)
+    public static void CallEnemyKilled(int pointValue, int scrapValue)
     {
         if(EnemyKilled != null)
         {

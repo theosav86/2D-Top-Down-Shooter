@@ -27,15 +27,25 @@ public class GameSceneController : MonoBehaviour
     [SerializeField]
     private PlayerController playerController;
 
+    public Levels[] levels;
+
+    private int levelIndex;
+
     // Start is called before the first frame update
     void Start()
     {
-        //playerController = FindObjectOfType<PlayerController>();
+        levelIndex = 0;
+
         playerController.PlayerTookDamage += PlayerController_PlayerTookDamage;
  
         //Start spawning of enemies
         StartCoroutine(SpawnEnemies());
+
+        //subscribing to the event EnemyKilled
+        EnemyBroker.EnemyKilled += EnemyBroker_EnemyKilled;
     }
+
+    
 
     //method that generated from the subscription of GameSceneController class to the PlayerTookDamage Event.
     private void PlayerController_PlayerTookDamage(int damageValue)
@@ -62,33 +72,32 @@ public class GameSceneController : MonoBehaviour
             Transform randomEnemySpawnPosition = enemySpawnPoints[selectedRandomSpawnPoint];
 
             //create an instance of an enemy on random enemy spawn position
-            StalkerController enemy = Instantiate(stalkerEnemyPrefab, randomEnemySpawnPosition.position, Quaternion.identity);
-           // enemy.gameObject.layer = LayerMask.NameToLayer("Enemy");
+        ////    StalkerController enemy = Instantiate(stalkerEnemyPrefab, randomEnemySpawnPosition.position, Quaternion.identity);
+            // enemy.gameObject.layer = LayerMask.NameToLayer("Enemy");
+
+            Enemy enemy = Instantiate(levels[levelIndex].enemyTypes[Random.Range(0, levels[levelIndex].enemyTypes.Length)], randomEnemySpawnPosition.position, Quaternion.identity);
 
             // enemy.shotSpeed = currentLevel.enemyShotSpeed;
             // enemy.speed = currentLevel.enemySpeed;
             // enemy.shotdelayTime = currentLevel.enemyShotDelay;
             // enemy.angerdelayTime = currentLevel.enemyAngerDelay;
 
-            //subscribing to the event EnemyKilled
-            enemy.EnemyKilled += Enemy_EnemyKilled;  
+            
 
             yield return wait;
         }
     }
 
-
-    //method generated from the subscription to the event EnemyKilled
-    private void Enemy_EnemyKilled(int pointValue, int scrapValue)
+    private void EnemyBroker_EnemyKilled(int pointValue, int scrapValue)
     {
-
-        //add point value to HUD
+        // add point value to HUD
         currentScore += pointValue;
         currentScrap += scrapValue;
 
-        if(UpdateScoreOnKill != null)
+        if (UpdateScoreOnKill != null)
         {
             UpdateScoreOnKill(currentScore, currentScrap); //invoking new parameterized event UpdateScoreOnKill
         }
+
     }
 }

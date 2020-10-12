@@ -8,4 +8,6 @@ public class Levels : ScriptableObject
     public int enemyCount;
 
     public float spawnTimer;
+
+    public Enemy[] enemyTypes;
 }

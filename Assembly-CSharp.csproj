@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\EnemyBroker.cs" />
     <Compile Include="Assets\Scripts\EnemyBulletController.cs" />
     <Compile Include="Assets\Scripts\EnemyController.cs" />
+    <Compile Include="Assets\Scripts\EnemyPistolBulletController.cs" />
     <Compile Include="Assets\Scripts\GameSceneController.cs" />
     <Compile Include="Assets\Scripts\HUDController.cs" />
     <Compile Include="Assets\Scripts\IInteractable.cs" />

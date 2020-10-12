@@ -14,7 +14,7 @@ public class StalkerController : Enemy
     //private Animator enemyAnimatorController;
 
     [SerializeField]
-    private int pointValue = 10;
+    private int pointValue = 2;
     [SerializeField]
     private int scrapValue = 10;
     private Transform playerTransform;
@@ -56,7 +56,7 @@ public class StalkerController : Enemy
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Enemy hit " + collision.gameObject.tag);
+     //   Debug.Log("Enemy hit " + collision.gameObject.tag);
 
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -89,9 +89,11 @@ public class StalkerController : Enemy
 
     public void EnemyDies()
     {
-        if (EnemyKilled != null)
+        EnemyBroker.CallEnemyKilled(pointValue, scrapValue);
+
+        if(EnemyKilled != null)
         {
-            EnemyKilled(pointValue, scrapValue); //EnemyKilled event invokation
+            EnemyKilled(pointValue, scrapValue);
         }
 
         //The effect has a self destruct script. Otherwise I would have to destroy it here after instatiate.

@@ -70,13 +70,17 @@ public class HUDController : MonoBehaviour
         //Reference to GameSceneController in order to subscribe to its events
         gameSceneController = FindObjectOfType<GameSceneController>();
 
-        //The class HUDController subscribes to the event gamescenecontroller update score on kill. It could be any other class as long as there is a reference to game scene controller class. get component<ClassName>
-        gameSceneController.UpdateScoreOnKill += GameSceneController_UpdateScoreOnKill;
+        //The class HUDController subscribes to the eevent gamescenecontroller update score on kill. It could be any other class as long as there is a reference to game scene controller class. get component<ClassName>
+        gameSceneController.UpdateScoreOnKill += GameSceneController_UpdateScoreOnKill1;
         //The class HUDController subscribes to the event gamescenecontroller update health on damage. It could be any other class as long as there is a reference to game scene controller class. get component<ClassName>
         gameSceneController.UpdateHealthOnDamage += GameSceneController_UpdateHealthOnDamage;
 
     }
 
+    private void GameSceneController_UpdateScoreOnKill1(int pointValue, int scrapValue)
+    {
+        UpdateScore(pointValue, scrapValue);
+    }
 
     private void ShieldBroker_ShieldIsDepleted()
     {
@@ -145,13 +149,6 @@ public class HUDController : MonoBehaviour
     {
         UpdateScore(pointValue, scrapValue);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 
     //method to update the score WHEN an enemy is killed
     private void UpdateScore(int pointValue, int scrapValue)
