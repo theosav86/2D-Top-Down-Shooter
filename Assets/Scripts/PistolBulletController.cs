@@ -27,18 +27,18 @@ public class PistolBulletController : MonoBehaviour
        
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-
+        Enemy enemyHit = other.collider.GetComponent<Enemy>();
         //APPLY DAMAGE ON ENEMYCONTROLLER INSTANCE THAT WAS HIT
-        if(collision.gameObject.CompareTag("Enemy"))
+        if(enemyHit != null)
         {
             if(ProjectileHitEnemy != null)
             {
                 ProjectileHitEnemy(); //Invoke the event.  We type it as if it was a method, with () at the end.
             }
             //apply damage
-            collision.gameObject.GetComponent<Enemy>().TakeDamage(pistolBulletDamage);
+            enemyHit.TakeDamage(pistolBulletDamage);
 
             //APPLY KNOCKBACK EFFECT
            // collision.gameObject.GetComponent<Rigidbody2D>().velocity =  //AddForce(gameObject.transform.forward * bulletForce * 100, ForceMode2D.Impulse);

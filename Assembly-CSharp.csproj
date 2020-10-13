@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\AmmoDisplayBroker.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\DiamondDetection.cs" />
     <Compile Include="Assets\Scripts\DiamontEnemyController.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnemyBroker.cs" />
@@ -76,12 +77,13 @@
     <Compile Include="Assets\Scripts\EnemyPistolBulletController.cs" />
     <Compile Include="Assets\Scripts\GameSceneController.cs" />
     <Compile Include="Assets\Scripts\HUDController.cs" />
-    <Compile Include="Assets\Scripts\IInteractable.cs" />
     <Compile Include="Assets\Scripts\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\MouseController.cs" />
     <Compile Include="Assets\Scripts\PistolBulletController.cs" />
     <Compile Include="Assets\Scripts\PistolController.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\PlayerDetection.cs" />
+    <Compile Include="Assets\Scripts\PlayerEvents.cs" />
     <Compile Include="Assets\Scripts\PlayerStats.cs" />
     <Compile Include="Assets\Scripts\QuitMenuController.cs" />
     <Compile Include="Assets\Scripts\ReloadWeaponBroker.cs" />

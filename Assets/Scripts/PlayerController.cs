@@ -3,25 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
-//Declaration of player took damage delegate
-public delegate void PlayerTookDamageHandler(int damageValue);
-
 public class PlayerController : MonoBehaviour
 {
-    //Player Stats. Actually make a PlayerStats class
-    //public float playerMoveSpeed = 7f;
+    #region Variables
 
-    //private variables
     private Rigidbody2D playerRigidbody;
     private PlayerStats playerStats;
     private Vector2 axisInput;
-    private GameSceneController gameSceneController;
-
     private int enemyCollisionDamageValue = 30;
 
     //select weapon variables
     private SelectedWeaponController selectedWeapon;
+
+    #endregion
 
 
     //declaration of the event enemy killed
@@ -32,7 +26,6 @@ public class PlayerController : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerStats = GetComponent<PlayerStats>();
         selectedWeapon = GetComponentInChildren<SelectedWeaponController>(); // so we have access in variable firePoint for example. I AM NOT USING THIS ONE. MAYBE DELETE IT .
-        gameSceneController = FindObjectOfType<GameSceneController>();
     }
     // Start is called before the first frame update
     void Start()

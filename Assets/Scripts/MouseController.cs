@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class MouseController : MonoBehaviour
 {
     #region Variables

@@ -9,25 +9,28 @@ using UnityEngine;
 //POWERUP
 //INVENTORY???
 
+//Declaration of player took damage delegate
+public delegate void PlayerTookDamageHandler(float damageValue);
 public class PlayerStats : MonoBehaviour
 {
+    //event declaration to update player health
+    public event PlayerTookDamageHandler UpdateHUDHealthOnDamage;
+
     // HEALTH  
-    public int playerMaxHealth = 100;
-    public int playerCurrentHealth;
+    public float playerMaxHealth = 100f;
+    public float playerCurrentHealth;
 
     [SerializeField]
     private bool isImmortal = true;
 
     public float playerMoveSpeed = 7f;
 
-    private PlayerController playerController;
-
     // Start is called before the first frame update
     void Start()
     {
         if (isImmortal == true)
         {
-            playerCurrentHealth = 10000000;
+            playerCurrentHealth = 10000000f;
        // playerCurrentHealth = playerMaxHealth;
         }
         else
@@ -35,18 +38,24 @@ public class PlayerStats : MonoBehaviour
             playerCurrentHealth = playerMaxHealth;
         }
 
-        playerController = GetComponent<PlayerController>();
-        playerController.PlayerTookDamage += PlayerController_PlayerTookDamage; //PlayerController Class subscribes to the event PlayerTookDamage
+        //Subscribe to playerTookDamageEvent
+        PlayerEvents.PlayerTookDamage += PlayerEvents_PlayerTookDamage;
     }
 
-    private void PlayerController_PlayerTookDamage(int damageValue)
+    private void PlayerEvents_PlayerTookDamage(float dmg)
     {
-        UpdateHealthStats(damageValue);
+        TakeHealthDamageStats(dmg);
+        
     }
 
-    private void UpdateHealthStats(int damageValue)
+    private void TakeHealthDamageStats(float damageValue)
     {
         playerCurrentHealth -= damageValue;
+
+        if (UpdateHUDHealthOnDamage != null)
+        {
+            UpdateHUDHealthOnDamage(playerCurrentHealth);
+        }
 
         if (playerCurrentHealth <= 0)
         {
@@ -56,6 +65,7 @@ public class PlayerStats : MonoBehaviour
 
     private void PlayerDies()
     {
+        PlayerEvents.CallPlayerDied();
         Time.timeScale = 0;
         Destroy(gameObject);
         print("You died...");

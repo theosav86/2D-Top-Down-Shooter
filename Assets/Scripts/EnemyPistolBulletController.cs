@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemyPistolBulletController : MonoBehaviour
 {
-    [SerializeField]
-    private int pistolBulletDamage = 50;
+
+    private float enemyPistolBulletDamage = 5f;
 
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -14,8 +14,8 @@ public class EnemyPistolBulletController : MonoBehaviour
 
         if(player != null)
         {
-            //PlayerTookDamage(pistolBulletDamage);
-            Debug.LogError("PLAYER WAS HIT");
+            PlayerEvents.CallPlayerTookDamage(enemyPistolBulletDamage);
+            Debug.LogError("PLAYER WAS HIT BY PISTOL");
         }
 
         Destroy(gameObject);

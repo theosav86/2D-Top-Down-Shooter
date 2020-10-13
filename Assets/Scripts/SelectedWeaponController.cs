@@ -3,11 +3,13 @@
 public class SelectedWeaponController : MonoBehaviour
 {
     public GameObject[] weapons;
-    public int currentWeapon;
+    
     public Transform firePoint; //visible in the Inspector to place the gameObject FirePoint inside the Player hierarchy
 
     public Cursor[] cursors;
-    
+
+    private int currentWeapon;
+
     // Start is called before the first frame update
     void Start()
     {

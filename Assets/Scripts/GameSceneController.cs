@@ -37,7 +37,7 @@ public class GameSceneController : MonoBehaviour
     {
         levelIndex = 1;
 
-        playerController.PlayerTookDamage += PlayerController_PlayerTookDamage;
+    //    playerController.PlayerTookDamage += PlayerController_PlayerTookDamage;
  
         //Start spawning of enemies
         StartCoroutine(SpawnEnemies());

@@ -7,8 +7,6 @@ using TMPro;
 public class HUDController : MonoBehaviour
 {
     #region Variables
-    private GameSceneController gameSceneController;
-
     public Canvas canvas;
     public Gradient healthBarColorGradient;
     public Gradient shieldBarColorGradient;
@@ -30,9 +28,6 @@ public class HUDController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Actually Create HealthBroker for sure!
-        //PlayerHealthBroker.playertookdamage etc.
-
         //Subscribing to the Shield is Draining Event.
         ShieldBroker.ShieldIsBurning += ShieldBroker_ShieldIsBurning;
 
@@ -67,19 +62,20 @@ public class HUDController : MonoBehaviour
         shieldSlider.maxValue = 100;
         shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
 
-        //Reference to GameSceneController in order to subscribe to its events
-        gameSceneController = FindObjectOfType<GameSceneController>();
+        EnemyBroker.EnemyKilled += EnemyBroker_EnemyKilled;
 
-        //The class HUDController subscribes to the eevent gamescenecontroller update score on kill. It could be any other class as long as there is a reference to game scene controller class. get component<ClassName>
-        gameSceneController.UpdateScoreOnKill += GameSceneController_UpdateScoreOnKill1;
-        //The class HUDController subscribes to the event gamescenecontroller update health on damage. It could be any other class as long as there is a reference to game scene controller class. get component<ClassName>
-        gameSceneController.UpdateHealthOnDamage += GameSceneController_UpdateHealthOnDamage;
-
+        //The class HUDController subscribes to the event update health on damage from player events.
+        PlayerEvents.PlayerRemainingHP += PlayerEvents_PlayerRemainingHP;
     }
 
-    private void GameSceneController_UpdateScoreOnKill1(int pointValue, int scrapValue)
+    private void EnemyBroker_EnemyKilled(int points,int scrap)
     {
-        UpdateScore(pointValue, scrapValue);
+        UpdateScore(points, scrap);
+    }
+
+    private void PlayerEvents_PlayerRemainingHP(float remainingHP)
+    {
+        UpdateHealth(remainingHP);
     }
 
     private void ShieldBroker_ShieldIsDepleted()
@@ -127,7 +123,6 @@ public class HUDController : MonoBehaviour
         else
         {
             ammoText.color = Color.white;
-
         }
     }
 
@@ -140,16 +135,6 @@ public class HUDController : MonoBehaviour
         reloadingText.GetComponent<Animator>().SetBool("PlayReload", false);
     }
 
-    private void GameSceneController_UpdateHealthOnDamage(int damageValue)
-    {
-        UpdateHealth(damageValue);
-    }
-
-    private void GameSceneController_UpdateScoreOnKill(int pointValue, int scrapValue)
-    {
-        UpdateScore(pointValue, scrapValue);
-    }
-
     //method to update the score WHEN an enemy is killed
     private void UpdateScore(int pointValue, int scrapValue)
     {
@@ -159,7 +144,7 @@ public class HUDController : MonoBehaviour
     }
 
     //method to update the score WHEN player takes damage
-    private void UpdateHealth(int damageValue)
+    private void UpdateHealth(float damageValue)
     {
         healthSlider.value = damageValue;
 
@@ -195,12 +180,11 @@ public class HUDController : MonoBehaviour
 
     private void ShieldIsDepleted()
     {
-            shieldSlider.value = 0f;
-            shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
+        shieldSlider.value = 0f;
+        shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
 
-            //Change the on/off Text to Depleted
-            playerShieldStatusText.text = "Depleted!!!";
-            playerShieldStatusText.color = Color.red;
-    }
-     
+        //Change the on/off Text to Depleted
+        playerShieldStatusText.text = "Depleted!!!";
+        playerShieldStatusText.color = Color.red;
+    }  
 }

@@ -15,6 +15,8 @@ MonoBehaviour:
   levelOrder: 1
   enemyCount: 50
   spawnTimer: 0.2
+  chanceToSpawnStalker: 0
+  chanceToSpawnDiamond: 0
   enemyTypes:
   - {fileID: 8394925028665900848, guid: 34faf9809b2fcfc4da5f773b0cd1eb99, type: 3}
-  - {fileID: 3308817110289946147, guid: 10bdbee0adc3294438372aac4efee549, type: 3}
+  - {fileID: 3064917122358063883, guid: 7d3c015980d32c049a40671a0a64c148, type: 3}

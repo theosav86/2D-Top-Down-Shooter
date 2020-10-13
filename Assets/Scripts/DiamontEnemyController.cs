@@ -12,6 +12,12 @@ public class DiamontEnemyController : Enemy
 {
     #region Variables
 
+    private int diamondHP = 120;
+
+    private int pointValue = 20;
+
+    private int scrapValue = 5;
+
     public Transform firePoint;
     public LayerMask checkWallsLayer;
     public LayerMask checkPlayerLayer;
@@ -30,7 +36,7 @@ public class DiamontEnemyController : Enemy
     private Rigidbody2D diamontRigidBody;
 
     private bool isPatrolling = true;
-    private bool playerSpotted = false;
+    public bool playerSpotted = false;
 
     private bool canShoot = true;
 
@@ -48,8 +54,11 @@ public class DiamontEnemyController : Enemy
 
     private float closestPoint = 100f;
 
-    private Transform playerTransform = null;
+    [HideInInspector]
+    public Transform playerTransform = null;
 
+    [SerializeField]
+    [Range(0f, 2f)]
     private float bulletForce = 0.3f;
 
     #endregion
@@ -73,16 +82,7 @@ public class DiamontEnemyController : Enemy
         closestPoint = 100f;
 
         diamontRigidBody = GetComponent<Rigidbody2D>();
-
-
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-       
-    }
-
 
     private void FixedUpdate()
     {
@@ -99,8 +99,17 @@ public class DiamontEnemyController : Enemy
 
         if (playerSpotted)
         {
+            //look at the player
+            enemyDirection = playerTransform.position - transform.position;
+
+            float angle = Mathf.Atan2(enemyDirection.y, enemyDirection.x) * Mathf.Rad2Deg;
+
+            diamontRigidBody.rotation = angle;
+
+            //Shoot at the player
             ShootPlayer();
         }
+        
     }
 
     private void FindStartingPatrolPoint()
@@ -125,11 +134,9 @@ public class DiamontEnemyController : Enemy
         }
     }
 
-   
+ 
 
-   
-
-    private void OnTriggerStay2D(Collider2D other)
+   /* private void OnTriggerStay2D(Collider2D other)
     {
         PlayerController player = other.GetComponent<PlayerController>();
 
@@ -150,7 +157,7 @@ public class DiamontEnemyController : Enemy
             playerSpotted = false;
             playerTransform = null;
         }
-    }
+    }*/
 
     private void ShootPlayer()
     {
@@ -182,6 +189,16 @@ public class DiamontEnemyController : Enemy
     private void EnemyReload()
     {
         canShoot = true;
+    }
+
+    public override void TakeDamage(int damageValue)
+    {
+        base.TakeDamage(damageValue);
+    }
+
+    public override void EnemyDeath()
+    {
+        EnemyBroker.CallEnemyKilled(pointValue, scrapValue);
     }
 
 
