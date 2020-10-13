@@ -91,11 +91,11 @@
     <Compile Include="Assets\Scripts\RocketProjectileController.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\Levels.cs" />
     <Compile Include="Assets\Scripts\SelectedWeaponController.cs" />
-    <Compile Include="Assets\Scripts\ShieldBroker.cs" />
     <Compile Include="Assets\Scripts\ShieldController.cs" />
     <Compile Include="Assets\Scripts\SmgController.cs" />
     <Compile Include="Assets\Scripts\StalkerController.cs" />
     <Compile Include="Assets\Scripts\Store.cs" />
+    <Compile Include="Assets\Scripts\UtilitiesBroker.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />

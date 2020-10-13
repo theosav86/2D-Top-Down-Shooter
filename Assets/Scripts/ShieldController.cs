@@ -36,9 +36,9 @@ public class ShieldController : MonoBehaviour
     {
         DisableShield();
 
-        ShieldBroker.CallShieldIsDisabled();
+        UtilitiesBroker.CallShieldIsDisabled();
 
-        ShieldBroker.ShieldTookDamage += ShieldBroker_ShieldTookDamage;
+        UtilitiesBroker.ShieldTookDamage += ShieldBroker_ShieldTookDamage;
 
         shieldTimeLeft = shieldDuration;
     }
@@ -73,7 +73,7 @@ public class ShieldController : MonoBehaviour
         shieldCollider.enabled = true;
         isShieldActive = true;
 
-        ShieldBroker.CallShieldIsEnabled();
+        UtilitiesBroker.CallShieldIsEnabled();
     }
 
     private void DisableShield()
@@ -82,7 +82,7 @@ public class ShieldController : MonoBehaviour
         shieldCollider.enabled = false;
         isShieldActive = false;
 
-        ShieldBroker.CallShieldIsDisabled();
+        UtilitiesBroker.CallShieldIsDisabled();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -101,14 +101,14 @@ public class ShieldController : MonoBehaviour
         {
             shieldTimeLeft -= Time.deltaTime;
 
-            ShieldBroker.CallShieldIsBurning(shieldTimeLeft);
+            UtilitiesBroker.CallShieldIsBurning(shieldTimeLeft);
         }
         else
         {
             //What to do when shield time is depleted
             isShieldActive = false;
             DisableShield();
-            ShieldBroker.CallShieldIsDepleted();
+            UtilitiesBroker.CallShieldIsDepleted();
         }
     }
     private void ShieldBroker_ShieldTookDamage(float damageValue)

@@ -1,7 +1,8 @@
 ﻿using System;
 
-public class ShieldBroker
+public class UtilitiesBroker
 {
+    #region SHIELD EVENTS
     public static event Action ShieldIsEnabled;
 
     public static event Action ShieldIsDisabled;
@@ -51,4 +52,31 @@ public class ShieldBroker
             ShieldIsDepleted();
         }
     }
+
+    #endregion
+
+    #region FLASHLIGHT EVENTS
+
+    public static event Action<float> FlashlightIsBurning;
+
+    public static event Action FlashlightIsDepleted;
+
+    public static void CallFlashlightIsBurning(float batteryLeft)
+    {
+        if(FlashlightIsBurning != null)
+        {
+            FlashlightIsBurning(batteryLeft);
+        }
+    }
+
+    public static void CallFlashlightIsDepleted()
+    {
+        if(FlashlightIsDepleted != null)
+        {
+            FlashlightIsDepleted();
+        }
+    }
+
+
+    #endregion
 }

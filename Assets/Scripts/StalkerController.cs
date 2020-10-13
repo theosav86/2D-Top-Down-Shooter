@@ -48,7 +48,7 @@ public class StalkerController : Enemy
         if (collision.gameObject.CompareTag("Shield"))
         {
             Debug.Log("APPLY DAMAGE TO SHIELD ");
-            ShieldBroker.CallShieldTookDamage(shieldDamage);
+            UtilitiesBroker.CallShieldTookDamage(shieldDamage);
             Destroy(gameObject);
         }
     }

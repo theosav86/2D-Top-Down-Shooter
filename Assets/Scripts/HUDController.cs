@@ -10,8 +10,10 @@ public class HUDController : MonoBehaviour
     public Canvas canvas;
     public Gradient healthBarColorGradient;
     public Gradient shieldBarColorGradient;
+    public Gradient batteryBarColorGradient;
     public Slider healthSlider;
     public Slider shieldSlider;
+    public Slider batterySlider;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI playerShieldStatusText; // ON / OFF
     public TextMeshProUGUI scoreText;
@@ -20,25 +22,30 @@ public class HUDController : MonoBehaviour
     public TextMeshProUGUI reloadingText;
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI magazinesLeftText;
+    public TextMeshProUGUI batteryText;
 
     public Image healthFillColorImage;
     public Image shieldFillColorImage;
+    public Image batteryFillColorImage;
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         //Subscribing to the Shield is Draining Event.
-        ShieldBroker.ShieldIsBurning += ShieldBroker_ShieldIsBurning;
+        UtilitiesBroker.ShieldIsBurning += ShieldBroker_ShieldIsBurning;
 
         //Subscribing to the Shield is Enabled Event.
-        ShieldBroker.ShieldIsEnabled += ShieldBroker_ShieldIsEnabled;
+        UtilitiesBroker.ShieldIsEnabled += ShieldBroker_ShieldIsEnabled;
 
         //Subscribing to the Shield is Disabled Event.
-        ShieldBroker.ShieldIsDisabled += ShieldBroker_ShieldIsDisabled;
+        UtilitiesBroker.ShieldIsDisabled += ShieldBroker_ShieldIsDisabled;
 
         //Subscribing to the Shield is Depleted Event.
-        ShieldBroker.ShieldIsDepleted += ShieldBroker_ShieldIsDepleted;
+        UtilitiesBroker.ShieldIsDepleted += ShieldBroker_ShieldIsDepleted;
+
+        //Subscribing to the Battery is Draining Event.
+        UtilitiesBroker.FlashlightIsBurning += UtilitiesBroker_FlashlightIsBurning;
 
         //Subscribing to the reload weapon event in the ReloadWeapon broker class
         ReloadWeaponBroker.WeaponIsReloading += ReloadWeaponBroker_WeaponIsReloading;
@@ -52,21 +59,30 @@ public class HUDController : MonoBehaviour
         //Subscribing to the Magazines update event in the AmmoDisplay broker class
         AmmoDisplayBroker.UpdateMagazinesOnHud += AmmoDisplayBroker_UpdateMagazinesOnHud;
 
-        //Initialize the HUD SLIDER with color and value and lastly the health status text.
-        playerHealthStatusText.text = "Healthy.";
-        healthSlider.maxValue = 100;
-        healthFillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
-
-        //Initialize the HUD SHIELD SLIDER with color and value and lastly the shield status text.
-        playerShieldStatusText.text = "OFF...";
-        shieldSlider.maxValue = 100;
-        shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
-
+        //Subscribing to the Enemy Killed event in the EnemyBroker class
         EnemyBroker.EnemyKilled += EnemyBroker_EnemyKilled;
 
         //The class HUDController subscribes to the event update health on damage from player events.
         PlayerEvents.PlayerRemainingHP += PlayerEvents_PlayerRemainingHP;
+
+        //Initialize the HEALTH HUD SLIDER with color and value and lastly the health status text.
+        playerHealthStatusText.text = "Healthy.";
+        healthSlider.maxValue = 100;
+        healthFillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
+
+        //Initialize the SHIELD HUD SLIDER with color and value and lastly the shield status text.
+        playerShieldStatusText.text = "OFF...";
+        shieldSlider.maxValue = 100;
+        shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
+
+        //Initialize the BATTERY HUD SLIDER with color and value and lastly the shield status text.
+        batteryText.text = "ALKALINE";
+        batterySlider.maxValue = 100;
+        batteryFillColorImage.color = shieldBarColorGradient.Evaluate(batterySlider.normalizedValue);
+
     }
+
+    
 
     private void EnemyBroker_EnemyKilled(int points,int scrap)
     {
@@ -99,6 +115,11 @@ public class HUDController : MonoBehaviour
         //Toggle the Text to On
         playerShieldStatusText.text = "ON!";
         playerShieldStatusText.color = Color.red;
+    }
+
+    private void UtilitiesBroker_FlashlightIsBurning(float batteryLeft)
+    {
+        UpdateBattery(batteryLeft);
     }
 
     private void AmmoDisplayBroker_UpdateMagazinesOnHud(int magazinesLeft)
@@ -140,7 +161,6 @@ public class HUDController : MonoBehaviour
     {
         scoreText.text = "Score: " + pointValue.ToString("D6");
         scrapText.text = "Scrap: " + scrapValue.ToString("D4");
-    
     }
 
     //method to update the score WHEN player takes damage
@@ -187,4 +207,11 @@ public class HUDController : MonoBehaviour
         playerShieldStatusText.text = "Depleted!!!";
         playerShieldStatusText.color = Color.red;
     }  
+
+    private void UpdateBattery(float batteryRemaining)
+    {
+        batterySlider.value = batteryRemaining;
+        //normalized value because the Gradient.evaluate goes from 0f - 1f but our health might be 25 or 100 or w/e.
+        batteryFillColorImage.color = batteryBarColorGradient.Evaluate(batterySlider.normalizedValue);
+    }
 }

@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
     //select weapon variables
     private SelectedWeaponController selectedWeapon;
 
+    public GameObject flashLight;
+    private bool flashLightEnabled = false;
+    public float flashLightBatteryLife = 100f;
+    private float maxFlashLightBatteryLife = 100f;
+
     #endregion
 
 
@@ -26,6 +31,7 @@ public class PlayerController : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerStats = GetComponent<PlayerStats>();
         selectedWeapon = GetComponentInChildren<SelectedWeaponController>(); // so we have access in variable firePoint for example. I AM NOT USING THIS ONE. MAYBE DELETE IT .
+        flashLight.SetActive(false);
     }
     // Start is called before the first frame update
     void Start()
@@ -38,6 +44,18 @@ public class PlayerController : MonoBehaviour
     {
         axisInput.x = Input.GetAxisRaw("Horizontal");
         axisInput.y = Input.GetAxisRaw("Vertical");
+
+        if(Input.GetButtonDown("Flashlight"))
+        {
+            Debug.Log(flashLightEnabled);
+            ToggleFlashLight();
+        }
+
+        if(flashLight.activeSelf)
+        {
+            Debug.Log("Current Battery");
+            BatteryLifeDraining();
+        }
 
     }
 
@@ -57,6 +75,30 @@ public class PlayerController : MonoBehaviour
             
             //  PlayerTakesDamage(50);
             Destroy(collision.gameObject);
+        }
+    }
+
+    private void ToggleFlashLight()
+    {
+        flashLightEnabled = !flashLightEnabled;
+        flashLight.SetActive(flashLightEnabled);
+    }
+
+    private void BatteryLifeDraining()
+    {
+        flashLightBatteryLife -= Time.deltaTime;
+
+        //Invoke the flashlight is draining event
+        UtilitiesBroker.CallFlashlightIsBurning(flashLightBatteryLife);
+
+        if(flashLightBatteryLife <= 0)
+        {
+            flashLightEnabled = false;
+            flashLight.SetActive(false);
+            flashLightBatteryLife = 0;
+
+            //Invoke the flashlight is depleted event
+            UtilitiesBroker.CallFlashlightIsDepleted();
         }
     }
 
