@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+using UnityEngine.Events;
 
-public class GameSceneController : MonoBehaviour
+
+public delegate void EnemyKilledHandler(int pointValue, int scrapValue);
+public class GameSceneController : Singleton<GameSceneController>
 {
     //event declaration to update the score
     public event EnemyKilledHandler UpdateScoreOnKill;
@@ -12,10 +13,15 @@ public class GameSceneController : MonoBehaviour
     //event declaration to update player health
     public event PlayerTookDamageHandler UpdateHealthOnDamage;
 
-  
+//    public UnityEvent<int> UpdateScoreOnHUD;
+//    public UnityEvent<int> UpdateScrapOnHUD;
+
+    #region Variables
+
     public int level = 1;
     public Transform[] enemySpawnPoints;
     public int numberOfEnemies = 50;
+
     [SerializeField]
     private float enemySpawnDelay = 0.5f;
 
@@ -32,12 +38,12 @@ public class GameSceneController : MonoBehaviour
 
     private int levelIndex;
 
+    #endregion
+
     // Start is called before the first frame update
     void Start()
     {
         levelIndex = 1;
-
-    //    playerController.PlayerTookDamage += PlayerController_PlayerTookDamage;
  
         //Start spawning of enemies
         StartCoroutine(SpawnEnemies());
@@ -83,9 +89,7 @@ public class GameSceneController : MonoBehaviour
             // enemy.shotSpeed = currentLevel.enemyShotSpeed;
             // enemy.speed = currentLevel.enemySpeed;
             // enemy.shotdelayTime = currentLevel.enemyShotDelay;
-            // enemy.angerdelayTime = currentLevel.enemyAngerDelay;
-
-            
+            // enemy.angerdelayTime = currentLevel.enemyAngerDelay;            
 
             yield return wait;
         }

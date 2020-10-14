@@ -7,6 +7,7 @@ using TMPro;
 public class HUDController : MonoBehaviour
 {
     #region Variables
+
     public Canvas canvas;
     public Gradient healthBarColorGradient;
     public Gradient shieldBarColorGradient;
@@ -27,11 +28,14 @@ public class HUDController : MonoBehaviour
     public Image healthFillColorImage;
     public Image shieldFillColorImage;
     public Image batteryFillColorImage;
+
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
+        #region Event Subscriptions
+
         //Subscribing to the Shield is Draining Event.
         UtilitiesBroker.ShieldIsBurning += ShieldBroker_ShieldIsBurning;
 
@@ -65,6 +69,10 @@ public class HUDController : MonoBehaviour
         //The class HUDController subscribes to the event update health on damage from player events.
         PlayerEvents.PlayerRemainingHP += PlayerEvents_PlayerRemainingHP;
 
+        #endregion
+
+        #region HUD Initialization
+
         //Initialize the HEALTH HUD SLIDER with color and value and lastly the health status text.
         playerHealthStatusText.text = "Healthy.";
         healthSlider.maxValue = 100;
@@ -80,9 +88,8 @@ public class HUDController : MonoBehaviour
         batterySlider.maxValue = 100;
         batteryFillColorImage.color = shieldBarColorGradient.Evaluate(batterySlider.normalizedValue);
 
+        #endregion
     }
-
-    
 
     private void EnemyBroker_EnemyKilled(int points,int scrap)
     {

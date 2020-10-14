@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public delegate void EnemyKilledHandler(int pointValue, int scrapValue);
+
 public class StalkerController : Enemy
 {
     //explosion animation or particle
@@ -23,9 +23,6 @@ public class StalkerController : Enemy
 
     private float shieldDamage = 20f;
     //private int playerDamage = 50;
-
-    //declaration of the event enemy killed
-    public event EnemyKilledHandler EnemyKilled;
 
     // Start is called before the first frame update
     void Start()
@@ -53,18 +50,6 @@ public class StalkerController : Enemy
         }
     }
 
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-     //   Debug.Log("Enemy hit " + collision.gameObject.tag);
-
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("APPLY DAMAGE TO PLAYER");
-        }
-    }
-
-
     private void EnemyFollowsPlayer()
     {
         //look at the player
@@ -87,14 +72,9 @@ public class StalkerController : Enemy
         }
     }
 
-    public void EnemyDies()
+    public override void EnemyDies()
     {
         EnemyBroker.CallEnemyKilled(pointValue, scrapValue);
-
-        if(EnemyKilled != null)
-        {
-            EnemyKilled(pointValue, scrapValue);
-        }
 
         //The effect has a self destruct script. Otherwise I would have to destroy it here after instatiate.
         GameObject enemyExplosionEffect = Instantiate(enemyExplosion, transform.position, Quaternion.identity);

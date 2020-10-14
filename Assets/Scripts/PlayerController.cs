@@ -47,13 +47,11 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetButtonDown("Flashlight"))
         {
-            Debug.Log(flashLightEnabled);
             ToggleFlashLight();
         }
 
         if(flashLight.activeSelf)
-        {
-            Debug.Log("Current Battery");
+        {  
             BatteryLifeDraining();
         }
 

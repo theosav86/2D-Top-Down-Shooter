@@ -92,6 +92,7 @@
     <Compile Include="Assets\Scripts\ScriptableObjects\Levels.cs" />
     <Compile Include="Assets\Scripts\SelectedWeaponController.cs" />
     <Compile Include="Assets\Scripts\ShieldController.cs" />
+    <Compile Include="Assets\Scripts\Singleton.cs" />
     <Compile Include="Assets\Scripts\SmgController.cs" />
     <Compile Include="Assets\Scripts\StalkerController.cs" />
     <Compile Include="Assets\Scripts\Store.cs" />

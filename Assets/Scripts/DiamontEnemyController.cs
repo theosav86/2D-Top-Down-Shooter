@@ -1,10 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-
-//ANOTHER ENEMY TYPE CLASS NOT YET IMPLEMENTED (DIAMONT ENEMY).
+﻿using UnityEngine;
 
 //ENEMY SHOULD MOVE INSIDE THE STAGE AND STOP TO SHOOT A PROJECTILE TOWARDS THE PLAYER.
 
@@ -193,12 +187,19 @@ public class DiamontEnemyController : Enemy
 
     public override void TakeDamage(int damageValue)
     {
-        base.TakeDamage(damageValue);
+        diamondHP -= damageValue;
+
+        if(diamondHP <= 0)
+        {
+            EnemyDies();
+        }
     }
 
-    public override void EnemyDeath()
+    public override void EnemyDies()
     {
         EnemyBroker.CallEnemyKilled(pointValue, scrapValue);
+
+        Destroy(gameObject);
     }
 
 
