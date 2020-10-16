@@ -9,13 +9,8 @@ using UnityEngine;
 //POWERUP
 //INVENTORY???
 
-//Declaration of player took damage delegate
-public delegate void PlayerTookDamageHandler(float damageValue);
 public class PlayerStats : MonoBehaviour
 {
-    //event declaration to update player health
-    public event PlayerTookDamageHandler UpdateHUDHealthOnDamage;
-
     // HEALTH  
     public float playerMaxHealth = 100f;
     public float playerCurrentHealth;
@@ -37,25 +32,15 @@ public class PlayerStats : MonoBehaviour
         {
             playerCurrentHealth = playerMaxHealth;
         }
-
-        //Subscribe to playerTookDamageEvent
-        PlayerEvents.PlayerTookDamage += PlayerEvents_PlayerTookDamage;
     }
 
-    private void PlayerEvents_PlayerTookDamage(float dmg)
-    {
-        TakeHealthDamageStats(dmg);
-        
-    }
-
-    private void TakeHealthDamageStats(float damageValue)
+    public void TakeHealthDamageStats(float damageValue)
     {
         playerCurrentHealth -= damageValue;
 
-        if (UpdateHUDHealthOnDamage != null)
-        {
-            UpdateHUDHealthOnDamage(playerCurrentHealth);
-        }
+        PlayerEvents.CallPlayerTookDamage(damageValue);
+
+        PlayerEvents.CallPlayerRemainingHP(playerCurrentHealth);
 
         if (playerCurrentHealth <= 0)
         {

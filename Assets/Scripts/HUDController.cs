@@ -63,11 +63,11 @@ public class HUDController : MonoBehaviour
         //Subscribing to the Magazines update event in the AmmoDisplay broker class
         AmmoDisplayBroker.UpdateMagazinesOnHud += AmmoDisplayBroker_UpdateMagazinesOnHud;
 
-        //Subscribing to the Enemy Killed event in the EnemyBroker class
-        EnemyBroker.EnemyKilled += EnemyBroker_EnemyKilled;
+        //Subscribing to game scene's controller update health on hud
+        GameSceneController.Instance.UpdateHealthOnDamage += UpdateHUDHealthOnDamage;
 
-        //The class HUDController subscribes to the event update health on damage from player events.
-        PlayerEvents.PlayerRemainingHP += PlayerEvents_PlayerRemainingHP;
+        //Subscribing to game scene's controller update score on hud
+        GameSceneController.Instance.UpdateScoreOnKill += UpdateHUDOnKill;
 
         #endregion
 
@@ -91,14 +91,14 @@ public class HUDController : MonoBehaviour
         #endregion
     }
 
-    private void EnemyBroker_EnemyKilled(int points,int scrap)
+    private void UpdateHUDHealthOnDamage(float currPlayerHP)
     {
-        UpdateScore(points, scrap);
+        UpdateHealth(currPlayerHP);
     }
 
-    private void PlayerEvents_PlayerRemainingHP(float remainingHP)
+    private void UpdateHUDOnKill(int pointValue, int scrapValue)
     {
-        UpdateHealth(remainingHP);
+        UpdateScore(pointValue, scrapValue);
     }
 
     private void ShieldBroker_ShieldIsDepleted()

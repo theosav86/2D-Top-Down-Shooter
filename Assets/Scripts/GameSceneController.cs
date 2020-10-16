@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
-public delegate void EnemyKilledHandler(int pointValue, int scrapValue);
+public delegate void GameSceneEventsHandler(int pointValue, int scrapValue);
+public delegate void PlayerTookDamageHandler(float playerHP);
 public class GameSceneController : Singleton<GameSceneController>
 {
     //event declaration to update the score
-    public event EnemyKilledHandler UpdateScoreOnKill;
+    public event GameSceneEventsHandler UpdateScoreOnKill;
 
     //event declaration to update player health
     public event PlayerTookDamageHandler UpdateHealthOnDamage;
@@ -27,7 +28,7 @@ public class GameSceneController : Singleton<GameSceneController>
 
     private int currentScore = 0;
     private int currentScrap = 0;
-    private int currentHealth = 100;
+    private float currentHealth = 100f;
 
     public Transform[] diamontPatrolPoints;
 
@@ -50,14 +51,14 @@ public class GameSceneController : Singleton<GameSceneController>
 
         //subscribing to the event EnemyKilled
         EnemyBroker.EnemyKilled += EnemyBroker_EnemyKilled;
+
+        //Subscribing to PlayerEvents player took damage
+        PlayerEvents.PlayerRemainingHP += PlayerEvents_PlayerRemainingHP;
     }
 
-    
-
-    //method that generated from the subscription of GameSceneController class to the PlayerTookDamage Event.
-    private void PlayerController_PlayerTookDamage(int damageValue)
+    private void PlayerEvents_PlayerRemainingHP(float currHP)
     {
-        currentHealth -= damageValue;
+        currentHealth = currHP;
 
         if (UpdateHealthOnDamage != null)
         {

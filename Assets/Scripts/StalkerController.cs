@@ -22,7 +22,7 @@ public class StalkerController : Enemy
     private Rigidbody2D enemyRigidBody;
 
     private float shieldDamage = 20f;
-    //private int playerDamage = 50;
+    private float playerDamage = 50f;
 
     // Start is called before the first frame update
     void Start()
@@ -37,18 +37,7 @@ public class StalkerController : Enemy
     {
         EnemyFollowsPlayer();
     }
-
-
-    //apply duration penalty (damage) on the shield
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Shield"))
-        {
-            Debug.Log("APPLY DAMAGE TO SHIELD ");
-            UtilitiesBroker.CallShieldTookDamage(shieldDamage);
-            Destroy(gameObject);
-        }
-    }
+    
 
     private void EnemyFollowsPlayer()
     {
@@ -84,4 +73,28 @@ public class StalkerController : Enemy
         Destroy(gameObject);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        PlayerStats playerStats = collision.collider.GetComponentInParent<PlayerStats>();
+
+        if(playerStats != null)
+        {
+            Debug.Log("APPLY DAMAGE TO PLAYER ");
+            playerStats.TakeHealthDamageStats(playerDamage);
+            Destroy(gameObject);
+        }
+    }
+
+    //apply duration penalty (damage) on the shield
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        ShieldController shield = other.GetComponent<ShieldController>();
+
+        if (shield != null)
+        {
+            Debug.Log("APPLY DAMAGE TO SHIELD ");
+            UtilitiesBroker.CallShieldTookDamage(shieldDamage);
+            Destroy(gameObject);
+        }
+    }
 }

@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D playerRigidbody;
     private PlayerStats playerStats;
     private Vector2 axisInput;
-    private int enemyCollisionDamageValue = 30;
+    private float enemyCollisionDamageValue = 30;
 
     //select weapon variables
     private SelectedWeaponController selectedWeapon;
@@ -66,11 +66,8 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.collider.CompareTag("Enemy"))
         {
-            if (PlayerTookDamage != null)
-            {
-                PlayerTookDamage(enemyCollisionDamageValue);
-            }
-            
+             PlayerEvents.CallPlayerTookDamage(enemyCollisionDamageValue);
+
             //  PlayerTakesDamage(50);
             Destroy(collision.gameObject);
         }
@@ -99,5 +96,4 @@ public class PlayerController : MonoBehaviour
             UtilitiesBroker.CallFlashlightIsDepleted();
         }
     }
-
 }
