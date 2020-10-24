@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerStats = GetComponent<PlayerStats>();
         selectedWeapon = GetComponentInChildren<SelectedWeaponController>(); // so we have access in variable firePoint for example. I AM NOT USING THIS ONE. MAYBE DELETE IT .
+        flashLightBatteryLife = maxFlashLightBatteryLife;
         flashLight.SetActive(false);
     }
     // Start is called before the first frame update

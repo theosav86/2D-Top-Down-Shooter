@@ -20,31 +20,31 @@ public class SelectedWeaponController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {        
-            if (Input.GetButtonDown("Pistol"))
-            {
-                currentWeapon = 0;
-                weapons[0].SetActive(true);
+        if (Input.GetButtonDown("Pistol"))
+        {
+            currentWeapon = 0;
+            weapons[0].SetActive(true);
 
-                weapons[1].SetActive(false);
-                weapons[2].SetActive(false);
-
-        }
-            if (Input.GetButtonDown("SMG"))
-            {
-                currentWeapon = 1;
-                weapons[1].SetActive(true);
-
-                weapons[0].SetActive(false);
-                weapons[2].SetActive(false);
+            weapons[1].SetActive(false);
+            weapons[2].SetActive(false);
 
         }
-            if (Input.GetButtonDown("Rocket"))
-            {
-                currentWeapon = 2;
-                weapons[2].SetActive(true);
+        if (Input.GetButtonDown("SMG"))
+        {
+            currentWeapon = 1;
+            weapons[1].SetActive(true);
 
-                weapons[0].SetActive(false);
-                weapons[1].SetActive(false);
+            weapons[0].SetActive(false);
+            weapons[2].SetActive(false);
+
+        }
+        if (Input.GetButtonDown("Rocket"))
+        {
+            currentWeapon = 2;
+            weapons[2].SetActive(true);
+
+            weapons[0].SetActive(false);
+            weapons[1].SetActive(false);
         }
 
     }        

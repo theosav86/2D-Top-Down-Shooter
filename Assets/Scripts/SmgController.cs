@@ -111,7 +111,8 @@ public class SmgController : SelectedWeaponController
             //SHOOT
             RaycastHit2D smgHit = Physics2D.Raycast(firePoint.position, firePoint.right, smgRange);
             lineRenderer.SetPosition(0, firePoint.position);
-            lineRenderer.SetPosition(1,firePoint.right * smgRange);
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z - Camera.main.transform.position.z));
+            lineRenderer.SetPosition(1, (mousePosition));
             bulletsInMagazine--;
 
             //Update bullet count on HUD
@@ -125,7 +126,6 @@ public class SmgController : SelectedWeaponController
                 {
                     enemyController.TakeDamage(smgDamage);
                 }
-
             }  
         }
         else

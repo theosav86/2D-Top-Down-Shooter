@@ -12,8 +12,8 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour
 {
     // HEALTH  
-    public float playerMaxHealth = 100f;
-    public float playerCurrentHealth;
+    public int playerMaxHealth = 100;
+    private int playerCurrentHealth;
 
     [SerializeField]
     private bool isImmortal = true;
@@ -25,7 +25,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (isImmortal == true)
         {
-            playerCurrentHealth = 10000000f;
+            playerCurrentHealth = 999999;
        // playerCurrentHealth = playerMaxHealth;
         }
         else
@@ -34,7 +34,7 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    public void TakeHealthDamageStats(float damageValue)
+    public void TakeHealthDamageStats(int damageValue)
     {
         playerCurrentHealth -= damageValue;
 

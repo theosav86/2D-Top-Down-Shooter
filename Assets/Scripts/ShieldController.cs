@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-
 
 public class ShieldController : MonoBehaviour
 {
@@ -12,7 +10,7 @@ public class ShieldController : MonoBehaviour
 
     private BoxCollider2D shieldCollider;
 
-    private float shieldHp = 100;
+    private float shieldHp = 100f;
 
     [SerializeField]
     private float shieldDuration = 100f;
@@ -22,6 +20,9 @@ public class ShieldController : MonoBehaviour
   
     [SerializeField]
     private bool isShieldActive = false;
+
+    private float shieldCriticalPercentage = 0.2f;
+    private bool isShieldCritical = false;
 
 
     private void Awake()
@@ -87,9 +88,11 @@ public class ShieldController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Enemy enemy = collision.collider.GetComponent<Enemy>();
+
         if(isShieldActive)
         {
-            if(collision.collider.CompareTag("Enemy"))
+            if(enemy != null)
             { 
                 Destroy(collision.gameObject); // For testing purpose just destroy the enemy on contact
             }
@@ -102,12 +105,22 @@ public class ShieldController : MonoBehaviour
             shieldTimeLeft -= Time.deltaTime;
 
             UtilitiesBroker.CallShieldIsBurning(shieldTimeLeft);
+
+            shieldAnimator.SetBool("shieldIsFlashing", false);
+
+            if(shieldTimeLeft < shieldDuration * shieldCriticalPercentage)
+            {
+                Debug.Log("Shield critical health!!!");
+                shieldAnimator.SetBool("shieldIsFlashing", true);
+            }
+
+
         }
         else
         {
             //What to do when shield time is depleted
-            isShieldActive = false;
             DisableShield();
+            shieldAnimator.SetBool("shieldIsFlashing", false);
             UtilitiesBroker.CallShieldIsDepleted();
         }
     }
@@ -117,7 +130,7 @@ public class ShieldController : MonoBehaviour
         shieldTimeLeft -= damageValue;
     }
 
-    private IEnumerator InitialShieldFlashing()
+   /* private IEnumerator InitialShieldFlashing()
     {
         isShieldActive = true;
 
@@ -126,7 +139,7 @@ public class ShieldController : MonoBehaviour
 
         shieldAnimator.SetBool("shieldIsFlashing", true);
 
-        yield return new WaitForSecondsRealtime(3);
+        yield return new WaitForSecondsRealtime(3f);
 
         shieldAnimator.SetBool("shieldIsFlashing", false);
 
@@ -135,4 +148,5 @@ public class ShieldController : MonoBehaviour
 
         isShieldActive = false;
     }
+   */
 }

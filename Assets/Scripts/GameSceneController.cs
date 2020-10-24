@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 
 public delegate void GameSceneEventsHandler(int pointValue, int scrapValue);
-public delegate void PlayerTookDamageHandler(float playerHP);
+public delegate void PlayerTookDamageHandler(int playerHP);
 public class GameSceneController : Singleton<GameSceneController>
 {
     //event declaration to update the score
@@ -28,7 +28,7 @@ public class GameSceneController : Singleton<GameSceneController>
 
     private int currentScore = 0;
     private int currentScrap = 0;
-    private float currentHealth = 100f;
+    private int currentHealth = 100;
 
     public Transform[] diamontPatrolPoints;
 
@@ -56,7 +56,7 @@ public class GameSceneController : Singleton<GameSceneController>
         PlayerEvents.PlayerRemainingHP += PlayerEvents_PlayerRemainingHP;
     }
 
-    private void PlayerEvents_PlayerRemainingHP(float currHP)
+    private void PlayerEvents_PlayerRemainingHP(int currHP)
     {
         currentHealth = currHP;
 

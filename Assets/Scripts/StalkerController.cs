@@ -22,7 +22,7 @@ public class StalkerController : Enemy
     private Rigidbody2D enemyRigidBody;
 
     private float shieldDamage = 20f;
-    private float playerDamage = 50f;
+    private int playerDamage = 50;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +48,6 @@ public class StalkerController : Enemy
 
         //move towards the position of the player
         enemyRigidBody.MovePosition(transform.position + enemyDirection * enemyMoveSpeed * Time.deltaTime);
-
     }
 
     public override void TakeDamage(int damageValue)

@@ -4,7 +4,7 @@ public class PlayerEvents
 {
     public static event Action<float> PlayerTookDamage;
 
-    public static event Action<float> PlayerRemainingHP;
+    public static event Action<int> PlayerRemainingHP;
 
     public static event Action PlayerDied;
 
@@ -23,7 +23,7 @@ public class PlayerEvents
         }
     }
 
-    public static void CallPlayerRemainingHP(float remainingHP)
+    public static void CallPlayerRemainingHP(int remainingHP)
     {
         if (PlayerRemainingHP != null)
         {

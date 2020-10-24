@@ -91,7 +91,7 @@ public class HUDController : MonoBehaviour
         #endregion
     }
 
-    private void UpdateHUDHealthOnDamage(float currPlayerHP)
+    private void UpdateHUDHealthOnDamage(int currPlayerHP)
     {
         UpdateHealth(currPlayerHP);
     }
@@ -171,7 +171,7 @@ public class HUDController : MonoBehaviour
     }
 
     //method to update the score WHEN player takes damage
-    private void UpdateHealth(float damageValue)
+    private void UpdateHealth(int damageValue)
     {
         healthSlider.value = damageValue;
 
