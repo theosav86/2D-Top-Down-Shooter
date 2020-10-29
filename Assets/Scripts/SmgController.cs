@@ -27,7 +27,8 @@ public class SmgController : SelectedWeaponController
     [SerializeField]
     private int smgMagazineSize = 30;
     private int bulletsInMagazine = 30;
-    private int totalMagazines = 5;
+    private int currentMagazineCount = 5;
+    private int totalAllowedMagazines = 10;
     private bool smgIsReloading;
     private LineRenderer lineRenderer;
 
@@ -38,7 +39,7 @@ public class SmgController : SelectedWeaponController
         
         smgIsReloading = false;
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, smgMagazineSize);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
 
       //lineRenderer = GetComponent<LineRenderer>();
     }
@@ -56,7 +57,7 @@ public class SmgController : SelectedWeaponController
 
         //Update bullet count on HUD
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, smgMagazineSize);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
 
     }
 
@@ -90,6 +91,19 @@ public class SmgController : SelectedWeaponController
         {
             lineRenderer.SetPosition(1, firePoint.position);
         }
+    }
+
+    //Update Ammo
+    public void UpdateTotalMagazines(int magazine)
+    {
+        currentMagazineCount += magazine;
+
+        if (currentMagazineCount > totalAllowedMagazines)
+        {
+            currentMagazineCount = totalAllowedMagazines;
+        }
+
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
     }
 
     private void OnDisable()
@@ -142,7 +156,7 @@ public class SmgController : SelectedWeaponController
     //Coroutine that reloads smg
     private IEnumerator ChangeMagazine()
     {
-        if (totalMagazines > 0)
+        if (currentMagazineCount > 0)
         {
             //call the method in the broker to invoke the reload event for the hud controller
             ReloadWeaponBroker.CallWeaponIsReloading();
@@ -151,13 +165,13 @@ public class SmgController : SelectedWeaponController
             smgSound.PlayOneShot(smgReloadClip);
 
             yield return new WaitForSecondsRealtime(smgReloadSpeed);
-            totalMagazines--;
+            currentMagazineCount--;
             smgIsReloading = false;
             bulletsInMagazine = 30;
 
             //Update bullet and magazine count on HUD
             AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, smgMagazineSize);
-            AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+            AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
 
             Debug.LogError("SMG RELOADED");
 

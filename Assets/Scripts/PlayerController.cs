@@ -24,24 +24,19 @@ public class PlayerController : MonoBehaviour
     public LayerMask interactLayer;
     public bool canInteract = false;
 
+    private bool movementIsEnabled = true;
+    private MouseController mouseController;
+
     #endregion
-
-
-    //declaration of the event enemy killed
-    public event PlayerTookDamageHandler PlayerTookDamage;
 
     private void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerStats = GetComponent<PlayerStats>();
         selectedWeapon = GetComponentInChildren<SelectedWeaponController>(); // so we have access in variable firePoint for example. I AM NOT USING THIS ONE. MAYBE DELETE IT .
+        mouseController = GetComponent<MouseController>();
         flashLightBatteryLife = maxFlashLightBatteryLife;
         flashLight.SetActive(false);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-       
     }
 
     // Update is called once per frame
@@ -72,16 +67,7 @@ public class PlayerController : MonoBehaviour
         playerRigidbody.MovePosition(playerRigidbody.position + axisInput * playerStats.playerMoveSpeed * Time.fixedDeltaTime);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.collider.CompareTag("Enemy"))
-        {
-             PlayerEvents.CallPlayerTookDamage(enemyCollisionDamageValue);
-
-            //  PlayerTakesDamage(50);
-            Destroy(collision.gameObject);
-        }
-    }
+    
 
     private void ToggleFlashLight()
     {
@@ -141,11 +127,9 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log(interactables);
 
-        IInteractable item = null;
-
         foreach(Collider2D interactable in interactables)
         {
-            item = interactable.GetComponent<IInteractable>();
+            IInteractable item = interactable.GetComponent<IInteractable>();
 
             if (item != null)
             {
@@ -155,5 +139,4 @@ public class PlayerController : MonoBehaviour
         }
         
     }
-
 }

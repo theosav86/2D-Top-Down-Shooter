@@ -4,19 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
-public delegate void GameSceneEventsHandler(int pointValue, int scrapValue);
-public delegate void PlayerTookDamageHandler(int playerHP);
 public class GameSceneController : Singleton<GameSceneController>
 {
-    //event declaration to update the score
-    public event GameSceneEventsHandler UpdateScoreOnKill;
-
-    //event declaration to update player health
-    public event PlayerTookDamageHandler UpdateHealthOnDamage;
-
-//    public UnityEvent<int> UpdateScoreOnHUD;
-//    public UnityEvent<int> UpdateScrapOnHUD;
-
     #region Variables
 
     public int level = 1;
@@ -25,10 +14,6 @@ public class GameSceneController : Singleton<GameSceneController>
 
     [SerializeField]
     private float enemySpawnDelay = 0.5f;
-
-    private int currentScore = 0;
-    private int currentScrap = 0;
-    private int currentHealth = 100;
 
     public Transform[] diamontPatrolPoints;
 
@@ -48,23 +33,8 @@ public class GameSceneController : Singleton<GameSceneController>
  
         //Start spawning of enemies
         StartCoroutine(SpawnEnemies());
-
-        //subscribing to the event EnemyKilled
-        EnemyBroker.EnemyKilled += EnemyBroker_EnemyKilled;
-
-        //Subscribing to PlayerEvents player took damage
-        PlayerEvents.PlayerRemainingHP += PlayerEvents_PlayerRemainingHP;
     }
 
-    private void PlayerEvents_PlayerRemainingHP(int currHP)
-    {
-        currentHealth = currHP;
-
-        if (UpdateHealthOnDamage != null)
-        {
-            UpdateHealthOnDamage(currentHealth);//invoking new parameterized event UpdateHealthOnDamage
-        }
-    }
 
    //Coroutine that spawns enemies
     private IEnumerator SpawnEnemies()
@@ -96,16 +66,4 @@ public class GameSceneController : Singleton<GameSceneController>
         }
     }
 
-    private void EnemyBroker_EnemyKilled(int pointValue, int scrapValue)
-    {
-        // add point value to HUD
-        currentScore += pointValue;
-        currentScrap += scrapValue;
-
-        if (UpdateScoreOnKill != null)
-        {
-            UpdateScoreOnKill(currentScore, currentScrap); //invoking new parameterized event UpdateScoreOnKill
-        }
-
-    }
 }

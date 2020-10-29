@@ -39,8 +39,6 @@ public class ShieldController : MonoBehaviour
 
         UtilitiesBroker.CallShieldIsDisabled();
 
-        UtilitiesBroker.ShieldTookDamage += ShieldBroker_ShieldTookDamage;
-
         shieldTimeLeft = shieldDuration;
     }
 
@@ -86,18 +84,20 @@ public class ShieldController : MonoBehaviour
         UtilitiesBroker.CallShieldIsDisabled();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Enemy enemy = collision.collider.GetComponent<Enemy>();
+        Enemy enemy = other.GetComponent<Enemy>();
 
         if(isShieldActive)
         {
             if(enemy != null)
-            { 
-                Destroy(collision.gameObject); // For testing purpose just destroy the enemy on contact
+            {
+                ShieldTakeDamage(enemy.collisionDamage);//For now I am using the enemy collision hp damage. I can create a different variable.
+                Destroy(enemy.gameObject); // For testing purpose just destroy the enemy on contact
             }
         }
     }
+
     private void ShieldTimeBurning()
     {
         if (shieldTimeLeft > 0)
@@ -124,10 +124,18 @@ public class ShieldController : MonoBehaviour
             UtilitiesBroker.CallShieldIsDepleted();
         }
     }
-    private void ShieldBroker_ShieldTookDamage(float damageValue)
+
+    private void ShieldTakeDamage(int timeDamageValue)
     {
-        shieldHp -= damageValue;
-        shieldTimeLeft -= damageValue;
+        shieldHp -= timeDamageValue;
+        shieldTimeLeft -= timeDamageValue;
+
+        UtilitiesBroker.CallShieldTookDamage(shieldHp);
+
+        if(shieldHp <= 0)
+        {
+            UtilitiesBroker.CallShieldIsDepleted();
+        }
     }
 
    /* private IEnumerator InitialShieldFlashing()

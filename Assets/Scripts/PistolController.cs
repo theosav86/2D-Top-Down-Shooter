@@ -25,7 +25,9 @@ public class PistolController : SelectedWeaponController
     [SerializeField]
     private const int pistolRange = 20;
 
-    private int totalMagazines = 10;
+    private int currentMagazineCount = 10;
+
+    private int totalAllowedMagazines = 20;
 
     private int magazineSize = 12;
 
@@ -48,7 +50,7 @@ public class PistolController : SelectedWeaponController
         
         pistolIsReloading = false;
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, magazineSize);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
         
     }
 
@@ -61,7 +63,7 @@ public class PistolController : SelectedWeaponController
 
         //Update ammo and magazine count on HUD
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, magazineSize);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
     }
 
     // Update is called once per frame
@@ -81,6 +83,20 @@ public class PistolController : SelectedWeaponController
             }
         }
     }
+
+    //Update Ammo
+    public void UpdateTotalMagazines(int magazine)
+    {
+        currentMagazineCount += magazine;
+
+        if(currentMagazineCount > totalAllowedMagazines)
+        {
+            currentMagazineCount = totalAllowedMagazines;
+        }
+
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+    }
+
 
     private void OnDisable()
     {
@@ -125,7 +141,7 @@ public class PistolController : SelectedWeaponController
     private IEnumerator ChangeMagazine()
     {
 
-        if (totalMagazines > 0)
+        if (currentMagazineCount > 0)
         {
             //Pistol reload SOUND
             pistolSound.PlayOneShot(pistolReloadClip);
@@ -133,7 +149,7 @@ public class PistolController : SelectedWeaponController
             //Update the HUD to notify the player that the gun is reloading
             ReloadWeaponBroker.CallWeaponIsReloading();
 
-            totalMagazines--;
+            currentMagazineCount--;
 
             //Wait for reload time
             yield return new WaitForSecondsRealtime(pistolReloadSpeed);
@@ -142,7 +158,7 @@ public class PistolController : SelectedWeaponController
             bulletsInMagazine = magazineSize;
 
             AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, magazineSize);
-            AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+            AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
 

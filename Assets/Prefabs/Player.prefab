@@ -318,6 +318,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMaxHealth: 100
+  playerCurrentScrap: 0
+  playerCurrentScore: 0
   isImmortal: 0
   playerMoveSpeed: 7
 --- !u!1 &6087381295385770613

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,11 +10,19 @@ using UnityEngine;
 //POWERUP
 //INVENTORY???
 
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : Singleton<PlayerStats>
 {
     // HEALTH  
     public int playerMaxHealth = 100;
     private int playerCurrentHealth;
+
+    //SCRAP
+    private int playerMaxScrap;
+    public int playerCurrentScrap;
+
+    //SCORE
+    public int playerCurrentScore;
+    
 
     [SerializeField]
     private bool isImmortal = true;
@@ -26,15 +35,46 @@ public class PlayerStats : MonoBehaviour
         if (isImmortal == true)
         {
             playerCurrentHealth = 999999;
-       // playerCurrentHealth = playerMaxHealth;
+            playerCurrentScrap = 9999;
         }
         else
         {
             playerCurrentHealth = playerMaxHealth;
+
+            playerCurrentScrap = playerMaxScrap;
+        }
+
+        //subscribing to the event EnemyKilled
+        EnemyBroker.EnemyKilled += UpdateScore;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Enemy enemy = collision.collider.GetComponent<Enemy>();
+
+        if (enemy != null)
+        {
+            TakeHealthDamage(enemy.collisionDamage);
         }
     }
 
-    public void TakeHealthDamageStats(int damageValue)
+    private void UpdateScore(int pointValue, int scrapValue)
+    {
+        // add point value to HUD
+        playerCurrentScore += pointValue;
+        playerCurrentScrap += scrapValue;
+
+        if(playerCurrentScrap >= playerMaxScrap)
+        {
+            playerCurrentScrap = playerMaxScrap;
+        }
+
+        //Invoking Update Score/Scrap events to update the HUD
+        PlayerEvents.CallUpdatePlayerScore(playerCurrentScore); 
+        PlayerEvents.CallUpdatePlayerScore(playerCurrentScrap);   
+    }
+
+    public void TakeHealthDamage(int damageValue)
     {
         playerCurrentHealth -= damageValue;
 

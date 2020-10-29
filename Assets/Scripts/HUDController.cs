@@ -63,11 +63,14 @@ public class HUDController : MonoBehaviour
         //Subscribing to the Magazines update event in the AmmoDisplay broker class
         AmmoDisplayBroker.UpdateMagazinesOnHud += AmmoDisplayBroker_UpdateMagazinesOnHud;
 
-        //Subscribing to game scene's controller update health on hud
-        GameSceneController.Instance.UpdateHealthOnDamage += UpdateHUDHealthOnDamage;
+        //Subscribing to Player Events update health on hud
+        PlayerEvents.PlayerRemainingHP += UpdateHUDHealthOnDamage;
 
-        //Subscribing to game scene's controller update score on hud
-        GameSceneController.Instance.UpdateScoreOnKill += UpdateHUDOnKill;
+        //Subscribing to Player Events update Score on hud
+        PlayerEvents.UpdatePlayerScore += PlayerEvents_UpdatePlayerScore;
+
+        //Subscribing to Player Events update Scrap on hud
+        PlayerEvents.UpdatePlayerScrap += PlayerEvents_UpdatePlayerScrap;
 
         #endregion
 
@@ -91,14 +94,19 @@ public class HUDController : MonoBehaviour
         #endregion
     }
 
+    private void PlayerEvents_UpdatePlayerScrap(int currentScrapValue)
+    {
+        UpdateScrap(currentScrapValue);
+    }
+
+    private void PlayerEvents_UpdatePlayerScore(int currentScoreValue)
+    {
+        UpdateScore(currentScoreValue);
+    }
+
     private void UpdateHUDHealthOnDamage(int currPlayerHP)
     {
         UpdateHealth(currPlayerHP);
-    }
-
-    private void UpdateHUDOnKill(int pointValue, int scrapValue)
-    {
-        UpdateScore(pointValue, scrapValue);
     }
 
     private void ShieldBroker_ShieldIsDepleted()
@@ -164,10 +172,14 @@ public class HUDController : MonoBehaviour
     }
 
     //method to update the score WHEN an enemy is killed
-    private void UpdateScore(int pointValue, int scrapValue)
+    private void UpdateScore(int currentScore)
     {
-        scoreText.text = "Score: " + pointValue.ToString("D6");
-        scrapText.text = "Scrap: " + scrapValue.ToString("D4");
+        scoreText.text = "Score: " + currentScore.ToString("D6");   
+    }
+
+    private void UpdateScrap(int currentScrap)
+    {
+        scrapText.text = "Scrap: " + currentScrap.ToString("D4");
     }
 
     //method to update the score WHEN player takes damage

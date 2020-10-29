@@ -19,7 +19,9 @@ public class RocketLauncherController : SelectedWeaponController
     [SerializeField]
     private AudioClip rocketReloadClip;
 
-    private int totalRockets = 10;
+    private int currentRockets = 10;
+
+    private int totalAllowedRockets = 10;
     [SerializeField]
     private float rocketForce = 2f;
     [SerializeField]
@@ -36,7 +38,7 @@ public class RocketLauncherController : SelectedWeaponController
     {   //if player interrupted the reload this is a check to see if the gun had bullets inside
         launcherIsReloading = false;
         AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalRockets);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
     }
 
 
@@ -48,7 +50,7 @@ public class RocketLauncherController : SelectedWeaponController
         rocketsInMagazine = 1;
         //Update bullet count and total rockets on HUD
         AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalRockets);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
     }
 
     // Update is called once per frame
@@ -98,6 +100,20 @@ public class RocketLauncherController : SelectedWeaponController
             rocketSound.PlayOneShot(rocketEmptyClip);
         }
     }
+
+    //Update Ammo
+    public void UpdateTotalMagazines(int magazine)
+    {
+        currentRockets += magazine;
+
+        if (currentRockets > totalAllowedRockets)
+        {
+            currentRockets = totalAllowedRockets;
+        }
+
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
+    }
+
     private void OnDisable()
     {
         //if player changes weapon mid reload
@@ -106,7 +122,7 @@ public class RocketLauncherController : SelectedWeaponController
 
     private IEnumerator reloadRocket()
     {
-        if (totalRockets > 0)
+        if (currentRockets > 0)
         {
 
             // Play Sound of rocket launcher reloading
@@ -117,13 +133,13 @@ public class RocketLauncherController : SelectedWeaponController
 
             yield return new WaitForSecondsRealtime(rocketReloadSpeed);
             
-            totalRockets--;
+            currentRockets--;
             launcherIsReloading = false;
             rocketsInMagazine = 1;
 
             //Update bullet and magazines count on HUD
             AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine);
-            AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalRockets);
+            AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
 
             Debug.LogError("ROCKET LAUNCHER RELOADED");
 
