@@ -43,6 +43,8 @@ public class PistolController : SelectedWeaponController
     
     private int bulletsInMagazine = 12;
 
+    private int weaponIndex = 0;
+
     #endregion
 
     private void OnEnable()
@@ -64,6 +66,7 @@ public class PistolController : SelectedWeaponController
         //Update ammo and magazine count on HUD
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, magazineSize);
         AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+        AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
     }
 
     // Update is called once per frame
@@ -94,7 +97,8 @@ public class PistolController : SelectedWeaponController
             currentMagazineCount = totalAllowedMagazines;
         }
 
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+        //AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+        AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
     }
 
 
@@ -150,6 +154,7 @@ public class PistolController : SelectedWeaponController
             ReloadWeaponBroker.CallWeaponIsReloading();
 
             currentMagazineCount--;
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
 
             //Wait for reload time
             yield return new WaitForSecondsRealtime(pistolReloadSpeed);
@@ -168,6 +173,7 @@ public class PistolController : SelectedWeaponController
             Debug.Log("NO AMMO LEFT. RUN !!!");
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
         }
     }
 

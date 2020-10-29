@@ -28,9 +28,11 @@ public class SmgController : SelectedWeaponController
     private int smgMagazineSize = 30;
     private int bulletsInMagazine = 30;
     private int currentMagazineCount = 5;
-    private int totalAllowedMagazines = 10;
+    private int totalAllowedMagazines = 15;
     private bool smgIsReloading;
     private LineRenderer lineRenderer;
+
+    private int weaponIndex = 1;
 
     #endregion
 
@@ -103,7 +105,8 @@ public class SmgController : SelectedWeaponController
             currentMagazineCount = totalAllowedMagazines;
         }
 
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+        //AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+        AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
     }
 
     private void OnDisable()
@@ -172,8 +175,9 @@ public class SmgController : SelectedWeaponController
             //Update bullet and magazine count on HUD
             AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, smgMagazineSize);
             AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
 
-            Debug.LogError("SMG RELOADED");
+          //  Debug.LogError("SMG RELOADED");
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
         }
@@ -182,6 +186,7 @@ public class SmgController : SelectedWeaponController
             Debug.LogError("SMG OUT OF AMMO");
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
         }
     }
 

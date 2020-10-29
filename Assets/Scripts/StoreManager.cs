@@ -15,23 +15,14 @@ public class StoreManager : MonoBehaviour, IInteractable
     public TextMeshProUGUI smgMagCountText;
     public TextMeshProUGUI rocketMagCountText;
 
-    private int weaponIndexToUpdate;
-
     private void Start()
     {
-        weaponIndexToUpdate = 0;
-        AmmoDisplayBroker.UpdateMagazinesOnHud += UpdateMagazinesOnStore;
+        AmmoDisplayBroker.UpdateMagazinesOnStore += UpdateMagazinesOnStore;
     }
 
-
-    public void UpdateMagCountForWeaponIndex(int gunIndex)
+    private void UpdateMagazinesOnStore(int gunIndex, int currentMagCount)
     {
-        weaponIndexToUpdate = gunIndex;
-    }
-
-    private void UpdateMagazinesOnStore(int currentMagCount)
-    {
-        switch (weaponIndexToUpdate)
+        switch (gunIndex)
         {
             case 0:
                 pistolMagCountText.text = currentMagCount.ToString("D2");
@@ -49,14 +40,13 @@ public class StoreManager : MonoBehaviour, IInteractable
 
     public void UseInteractable()
     {
-        Debug.Log("Store Used");
-
         storeHudPanel.gameObject.SetActive(true);
         Time.timeScale = 0;
     }
 
     public void StopUseInteractable()
     {
+        storeHudPanel.gameObject.SetActive(false);
         Time.timeScale = 1;
     }
 

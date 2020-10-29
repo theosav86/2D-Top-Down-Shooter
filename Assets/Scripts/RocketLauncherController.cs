@@ -21,7 +21,7 @@ public class RocketLauncherController : SelectedWeaponController
 
     private int currentRockets = 10;
 
-    private int totalAllowedRockets = 10;
+    private int totalAllowedRockets = 50;
     [SerializeField]
     private float rocketForce = 2f;
     [SerializeField]
@@ -29,6 +29,8 @@ public class RocketLauncherController : SelectedWeaponController
 
     private int rocketsInMagazine = 1; // check if weapon loaded
     private bool launcherIsReloading = false; // check if weapon is reloading
+
+    private int weaponIndex = 2;
 
  //?????????????  private Vector3 mouseAimLocation; need to apply AOE DAMAGE with the launcher
 
@@ -94,6 +96,7 @@ public class RocketLauncherController : SelectedWeaponController
 
             //Update bullet count on HUD
             AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine); //totalRockets used to be "rocketsInMagazine". Because now the HUD shows 1/10 instead of 1/1 in the ammo counter. But it turns red on critical ammo. Which to keep?
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentRockets);
         }
         else
         {
@@ -111,7 +114,8 @@ public class RocketLauncherController : SelectedWeaponController
             currentRockets = totalAllowedRockets;
         }
 
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
+        //AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
+        AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentRockets);
     }
 
     private void OnDisable()
@@ -140,6 +144,7 @@ public class RocketLauncherController : SelectedWeaponController
             //Update bullet and magazines count on HUD
             AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine);
             AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentRockets);
 
             Debug.LogError("ROCKET LAUNCHER RELOADED");
 
@@ -150,6 +155,7 @@ public class RocketLauncherController : SelectedWeaponController
             Debug.Log("NO AMMO LEFT. RUN !!!");
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentRockets);
 
         }
     }

@@ -6,6 +6,8 @@ public class AmmoDisplayBroker
 
     public static event Action<int> UpdateMagazinesOnHud; //Update how many many magazines left.
 
+    public static event Action<int, int> UpdateMagazinesOnStore;
+
     public static event Action CriticalAmmoOnHUD; // if current ammo in magazine = 1/3 * Total magazine capacity then make the numbers RED on hud. // The rocket launcher invokes the event when total rockets is less than 3.
 
     
@@ -22,6 +24,14 @@ public class AmmoDisplayBroker
         if (UpdateAmmoOnHud != null)
         {
             UpdateMagazinesOnHud(magazinesLeftValue);
+        }
+    }
+
+    public static void CallUpdateMagazinesOnStore(int weaponIndex, int magazinesLeft)
+    {
+        if(UpdateMagazinesOnStore != null)
+        {
+            UpdateMagazinesOnStore(weaponIndex, magazinesLeft);
         }
     }
 
