@@ -20,6 +20,10 @@ public class PlayerController : MonoBehaviour
     public float flashLightBatteryLife = 100f;
     private float maxFlashLightBatteryLife = 100f;
 
+    public float interactRadius = 2f;
+    public LayerMask interactLayer;
+    public bool canInteract = false;
+
     #endregion
 
 
@@ -56,6 +60,11 @@ public class PlayerController : MonoBehaviour
             BatteryLifeDraining();
         }
 
+
+        if(Input.GetButtonDown("Use") && canInteract)
+        {
+            Use();  
+        }
     }
 
     private void FixedUpdate()
@@ -97,4 +106,54 @@ public class PlayerController : MonoBehaviour
             UtilitiesBroker.CallFlashlightIsDepleted();
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        IInteractable interactable = collision.GetComponent<IInteractable>();
+
+        if(interactable != null)
+        {
+            canInteract = true;
+        }
+        else
+        {
+            canInteract = false;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+
+        IInteractable interactable = collision.GetComponent<IInteractable>();
+
+        if (interactable != null)
+        {
+            canInteract = false;
+        }
+    }
+
+    private void Use()
+    {
+
+        Collider2D[] interactables;
+
+        interactables = Physics2D.OverlapCircleAll(transform.position, interactRadius);
+
+        Debug.Log(interactables);
+
+        IInteractable item = null;
+
+        foreach(Collider2D interactable in interactables)
+        {
+            item = interactable.GetComponent<IInteractable>();
+
+            if (item != null)
+            {
+                item.UseInteractable();
+                Debug.Log(item);
+            }
+        }
+        
+    }
+
 }

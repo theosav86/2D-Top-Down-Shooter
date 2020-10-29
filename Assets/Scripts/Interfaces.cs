@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Store : MonoBehaviour
+
+public interface IInteractable
 {
-    //Stock or Unlimited supply
-
-
+    void UseInteractable();
 }
+

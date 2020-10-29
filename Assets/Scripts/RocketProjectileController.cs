@@ -21,9 +21,11 @@ public class RocketProjectileController : MonoBehaviour
 
         foreach(Collider2D collider in collidersHitByRocketSplash)
         {
-            if(collider.CompareTag("Enemy"))
+            Enemy e = collider.GetComponent<Enemy>();
+
+            if (e != null)
             {
-                collider.GetComponent<Enemy>().TakeDamage(rocketDamage);
+                e.TakeDamage(rocketDamage);
             }
         }
 

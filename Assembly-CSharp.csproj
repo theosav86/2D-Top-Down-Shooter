@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\EnemyPistolBulletController.cs" />
     <Compile Include="Assets\Scripts\GameSceneController.cs" />
     <Compile Include="Assets\Scripts\HUDController.cs" />
+    <Compile Include="Assets\Scripts\Interfaces.cs" />
     <Compile Include="Assets\Scripts\MainMenuController.cs" />
     <Compile Include="Assets\Scripts\MouseController.cs" />
     <Compile Include="Assets\Scripts\PistolBulletController.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Assets\Scripts\Singleton.cs" />
     <Compile Include="Assets\Scripts\SmgController.cs" />
     <Compile Include="Assets\Scripts\StalkerController.cs" />
-    <Compile Include="Assets\Scripts\Store.cs" />
+    <Compile Include="Assets\Scripts\StoreManager.cs" />
     <Compile Include="Assets\Scripts\UtilitiesBroker.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
