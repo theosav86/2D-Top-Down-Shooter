@@ -16,20 +16,18 @@ public class DiamontEnemyController : Enemy
     public LayerMask checkWallsLayer;
     public LayerMask checkPlayerLayer;
 
-    [SerializeField]
-    private GameObject enemyBullet;
+    public GameObject enemyBullet;
 
     private int diamontPointValue = 20;
 
     private float diamontMoveSpeed = 2f;
-
-    private float timeForNextStep = 2f;
 
     private Vector2 enemyDirection;
 
     private Rigidbody2D diamontRigidBody;
 
     private bool isPatrolling = true;
+    
     public bool playerSpotted = false;
 
     private bool canShoot = true;
@@ -127,31 +125,6 @@ public class DiamontEnemyController : Enemy
             patrolPointIndex = 0;
         }
     }
-
- 
-
-   /* private void OnTriggerStay2D(Collider2D other)
-    {
-        PlayerController player = other.GetComponent<PlayerController>();
-
-        if(player != null)
-        {
-            playerTransform = other.transform;
-
-            //look at the player
-            enemyDirection = playerTransform.position - transform.position;
-            float angle = Mathf.Atan2(enemyDirection.y, enemyDirection.x) * Mathf.Rad2Deg;
-            diamontRigidBody.rotation = angle;
-
-            playerSpotted = true;
-            
-        }
-        else
-        {
-            playerSpotted = false;
-            playerTransform = null;
-        }
-    }*/
 
     private void ShootPlayer()
     {

@@ -10,11 +10,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D playerRigidbody;
     private PlayerStats playerStats;
     private Vector2 axisInput;
-    private float enemyCollisionDamageValue = 30;
 
     //select weapon variables
-    [HideInInspector]
-    public SelectedWeaponController weaponHolder;
+    public GameObject weaponHolder;
 
     public GameObject flashLight;
     private bool flashLightEnabled = false;
@@ -24,17 +22,16 @@ public class PlayerController : MonoBehaviour
     public float interactRadius = 2f;
     public LayerMask interactLayer;
     
-    public bool canInteract = false;
-
-    private bool movementIsEnabled = true;
     private MouseController mouseController;
 
-    public IInteractable item;
+    public bool isUsing = false;
+
+    private IInteractable item;
 
     private PlayerBaseState currentState;
 
     public readonly PlayerNormalState normalState = new PlayerNormalState();
-    public readonly PlayerShopState useState = new PlayerShopState();
+    public readonly PlayerUseState useState = new PlayerUseState();
 
     #endregion
 
@@ -42,7 +39,6 @@ public class PlayerController : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerStats = GetComponent<PlayerStats>();
-        weaponHolder = GetComponentInChildren<SelectedWeaponController>(); // so we have access in variable firePoint for example. I AM NOT USING THIS ONE. MAYBE DELETE IT .
         mouseController = GetComponent<MouseController>();
         flashLightBatteryLife = maxFlashLightBatteryLife;
         flashLight.SetActive(false);
@@ -75,6 +71,11 @@ public class PlayerController : MonoBehaviour
         if(flashLight.activeSelf)
         {  
             BatteryLifeDraining();
+        }
+
+        if (Input.GetButtonDown("Use"))
+        {
+            Use();
         }
 
 
@@ -114,45 +115,34 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        IInteractable interactable = collision.GetComponent<IInteractable>();
-
-        if(interactable != null)
-        {
-            canInteract = true;
-        }
-        else
-        {
-            canInteract = false;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-
-        IInteractable interactable = collision.GetComponent<IInteractable>();
-
-        if (interactable != null)
-        {
-            canInteract = false;
-        }
     }
 
     public void Use()
     {
 
-        Collider2D[] interactables;
+        Collider2D interactable;
+        interactable = Physics2D.OverlapCircle(transform.position, interactRadius, interactLayer);
+        item = interactable.GetComponent<IInteractable>();
 
-        interactables = Physics2D.OverlapCircleAll(transform.position, interactRadius);
-
-        foreach(Collider2D interactable in interactables)
+        if(item != null)
         {
-            item = interactable.GetComponent<IInteractable>();
-
-            if (item != null)
+            if (!isUsing)
             {
+                isUsing = true;
+                weaponHolder.SetActive(false);
                 item.UseInteractable();
-                Debug.Log(item);
             }
+            else
+            {
+                isUsing = false;
+                weaponHolder.SetActive(true);
+                item.StopUseInteractable();
+                item = null;
+            }
+        }
+        else
+        {
+            Debug.Log("No interactable found");
         }
         
     }

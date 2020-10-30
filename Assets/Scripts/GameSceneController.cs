@@ -17,8 +17,7 @@ public class GameSceneController : Singleton<GameSceneController>
 
     public Transform[] diamontPatrolPoints;
 
-    [SerializeField]
-    private PlayerController playerController;
+    public PlayerController playerController;
 
     public Levels[] levels;
 
@@ -75,13 +74,14 @@ public class GameSceneController : Singleton<GameSceneController>
 
     private void CheckPlayerState(PlayerBaseState newState)
     {
-        if(newState == playerController.normalState)
+        if(!playerController.isUsing)
         {
+            
             Time.timeScale = 1f;
         }
-        else if(newState == playerController.useState)
+        else if(playerController.isUsing)
         {
-            Time.timeScale = 0.1f;
+            Time.timeScale = 0f;
         }
     }
 

@@ -10,7 +10,7 @@ using UnityEngine;
 //POWERUP
 //INVENTORY???
 
-public class PlayerStats : Singleton<PlayerStats>
+public class PlayerStats : Singleton<PlayerStats>, IDamagable
 {
     // HEALTH  
     public int playerMaxHealth = 100;
@@ -52,7 +52,7 @@ public class PlayerStats : Singleton<PlayerStats>
 
         if (enemy != null)
         {
-            TakeHealthDamage(enemy.collisionDamage);
+            TakeDamage(enemy.collisionDamage);
         }
     }
 
@@ -72,7 +72,8 @@ public class PlayerStats : Singleton<PlayerStats>
         PlayerEvents.CallUpdatePlayerScrap(playerCurrentScrap);   
     }
 
-    public void TakeHealthDamage(int damageValue)
+    //IDamagable Function
+    public void TakeDamage(int damageValue)
     {
         playerCurrentHealth -= damageValue;
 
@@ -93,4 +94,6 @@ public class PlayerStats : Singleton<PlayerStats>
         Destroy(gameObject);
         print("You died...");
     }
+
+    
 }

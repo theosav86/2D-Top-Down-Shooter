@@ -10,14 +10,11 @@ public class RocketLauncherController : SelectedWeaponController
 
     private AudioSource rocketSound;
 
-    [SerializeField]
-    private AudioClip rocketShotClip;
+    public AudioClip rocketShotClip;
 
-    [SerializeField]
-    private AudioClip rocketEmptyClip;
+    public AudioClip rocketEmptyClip;
 
-    [SerializeField]
-    private AudioClip rocketReloadClip;
+    public AudioClip rocketReloadClip;
 
     private int currentRockets = 10;
 
@@ -68,7 +65,6 @@ public class RocketLauncherController : SelectedWeaponController
         {
             if (gameObject.activeSelf && launcherIsReloading == false)
             {
-                Debug.Log("RELOADING LAUNCHER YOU PRESSED R");
                 launcherIsReloading = true;
                 StartCoroutine(reloadRocket());
             }
@@ -145,8 +141,6 @@ public class RocketLauncherController : SelectedWeaponController
             AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine);
             AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
             AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentRockets);
-
-            Debug.LogError("ROCKET LAUNCHER RELOADED");
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
         }

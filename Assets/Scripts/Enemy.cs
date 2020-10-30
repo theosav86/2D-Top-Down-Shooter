@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamagable
 {
 
     public int collisionDamage = 30;

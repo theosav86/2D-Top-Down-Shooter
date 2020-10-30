@@ -10,3 +10,8 @@ public interface IInteractable
     void StopUseInteractable();
 }
 
+public interface IDamagable
+{
+    void TakeDamage(int damageValue);
+}
+

@@ -5,17 +5,16 @@ using UnityEngine;
 public class EnemyPistolBulletController : MonoBehaviour
 {
 
-    private float enemyPistolBulletDamage = 5f;
+    private int enemyPistolBulletDamage = 5;
 
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        PlayerController player = other.collider.GetComponent<PlayerController>();
+        IDamagable damagable = other.collider.GetComponent<IDamagable>();
 
-        if(player != null)
+        if(damagable != null)
         {
-            PlayerEvents.CallPlayerTookDamage(enemyPistolBulletDamage);
-            Debug.LogError("PLAYER WAS HIT BY PISTOL");
+            damagable.TakeDamage(enemyPistolBulletDamage);
         }
 
         Destroy(gameObject);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShieldController : MonoBehaviour
+public class ShieldController : MonoBehaviour, IDamagable
 {
     private Animator shieldAnimator;
 
@@ -88,11 +88,11 @@ public class ShieldController : MonoBehaviour
     {
         Enemy enemy = other.GetComponent<Enemy>();
 
-        if(isShieldActive)
+        if (isShieldActive)
         {
             if(enemy != null)
             {
-                ShieldTakeDamage(enemy.collisionDamage);//For now I am using the enemy collision hp damage. I can create a different variable.
+                TakeDamage(enemy.collisionDamage);//For now I am using the enemy collision hp damage. I can create a different variable.
                 Destroy(enemy.gameObject); // For testing purpose just destroy the enemy on contact
             }
         }
@@ -125,7 +125,7 @@ public class ShieldController : MonoBehaviour
         }
     }
 
-    private void ShieldTakeDamage(int timeDamageValue)
+    public void TakeDamage(int timeDamageValue)
     {
         shieldHp -= timeDamageValue;
         shieldTimeLeft -= timeDamageValue;
@@ -137,4 +137,5 @@ public class ShieldController : MonoBehaviour
             UtilitiesBroker.CallShieldIsDepleted();
         }
     }
+
 }

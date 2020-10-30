@@ -12,14 +12,11 @@ public class PistolController : SelectedWeaponController
 
     private AudioSource pistolSound;
 
-    [SerializeField]
-    private AudioClip pistolShotClip;
+    public AudioClip pistolShotClip;
 
-    [SerializeField]
-    private AudioClip pistolEmptyClip;
+    public AudioClip pistolEmptyClip;
 
-    [SerializeField]
-    private AudioClip pistolReloadClip;
+    public AudioClip pistolReloadClip;
 
 
     [SerializeField]

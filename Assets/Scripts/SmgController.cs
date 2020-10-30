@@ -10,12 +10,9 @@ public class SmgController : SelectedWeaponController
 
     private AudioSource smgSound; //Audio Souce Component
 
-   // [SerializeField]
     public AudioClip smgShotClip;
-    [SerializeField]
-    private AudioClip smgEmptyClip;
-    [SerializeField]
-    private AudioClip smgReloadClip;
+    public AudioClip smgEmptyClip;
+    public AudioClip smgReloadClip;
 
     private int smgDamage = 30;
     private float smgRange = 5f;

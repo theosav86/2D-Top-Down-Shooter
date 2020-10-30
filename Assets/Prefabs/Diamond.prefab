@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3064917121688274831}
   - component: {fileID: 3064917121688274816}
   - component: {fileID: 3217795162567310734}
-  m_Layer: 11
+  m_Layer: 22
   m_Name: DiamondDetection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ Rigidbody2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3064917121688274818}
   m_BodyType: 0
-  m_Simulated: 0
+  m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
@@ -81,7 +81,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 7
 --- !u!1 &3064917122358063884
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 3064917122358063881}
   - component: {fileID: 3064917122358063882}
   - component: {fileID: 3064917122358063883}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Diamond
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,13 +169,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c0dbdecffc6d144c94d1d3dad1d0a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collisionDamage: 30
   firePoint: {fileID: 3918671273163546662}
   checkWallsLayer:
     serializedVersion: 2
     m_Bits: 1024
   checkPlayerLayer:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 5242880
   enemyBullet: {fileID: 6752213900107645694, guid: 559617cfe2295eb41b8b75217edfb200,
     type: 3}
   playerSpotted: 0
@@ -192,7 +193,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3918671272322136704}
   - component: {fileID: 3918671272322136705}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -273,7 +274,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3918671272718152095}
   - component: {fileID: 3918671272718152094}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Diamond_Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -353,7 +354,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3918671273163546662}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,7 +385,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3918671273577911580}
   - component: {fileID: 3918671273577911581}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
