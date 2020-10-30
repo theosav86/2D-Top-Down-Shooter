@@ -10,16 +10,15 @@ public class RocketLauncherController : SelectedWeaponController
 
     private AudioSource rocketSound;
 
-    [SerializeField]
-    private AudioClip rocketShotClip;
+    public AudioClip rocketShotClip;
 
-    [SerializeField]
-    private AudioClip rocketEmptyClip;
+    public AudioClip rocketEmptyClip;
 
-    [SerializeField]
-    private AudioClip rocketReloadClip;
+    public AudioClip rocketReloadClip;
 
-    private int totalRockets = 10;
+    private int currentRockets = 10;
+
+    private int totalAllowedRockets = 50;
     [SerializeField]
     private float rocketForce = 2f;
     [SerializeField]
@@ -27,6 +26,8 @@ public class RocketLauncherController : SelectedWeaponController
 
     private int rocketsInMagazine = 1; // check if weapon loaded
     private bool launcherIsReloading = false; // check if weapon is reloading
+
+    private int weaponIndex = 2;
 
  //?????????????  private Vector3 mouseAimLocation; need to apply AOE DAMAGE with the launcher
 
@@ -36,7 +37,7 @@ public class RocketLauncherController : SelectedWeaponController
     {   //if player interrupted the reload this is a check to see if the gun had bullets inside
         launcherIsReloading = false;
         AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalRockets);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
     }
 
 
@@ -48,7 +49,7 @@ public class RocketLauncherController : SelectedWeaponController
         rocketsInMagazine = 1;
         //Update bullet count and total rockets on HUD
         AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalRockets);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
     }
 
     // Update is called once per frame
@@ -64,7 +65,6 @@ public class RocketLauncherController : SelectedWeaponController
         {
             if (gameObject.activeSelf && launcherIsReloading == false)
             {
-                Debug.Log("RELOADING LAUNCHER YOU PRESSED R");
                 launcherIsReloading = true;
                 StartCoroutine(reloadRocket());
             }
@@ -92,12 +92,28 @@ public class RocketLauncherController : SelectedWeaponController
 
             //Update bullet count on HUD
             AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine); //totalRockets used to be "rocketsInMagazine". Because now the HUD shows 1/10 instead of 1/1 in the ammo counter. But it turns red on critical ammo. Which to keep?
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentRockets);
         }
         else
         {
             rocketSound.PlayOneShot(rocketEmptyClip);
         }
     }
+
+    //Update Ammo
+    public void UpdateTotalMagazines(int magazine)
+    {
+        currentRockets += magazine;
+
+        if (currentRockets > totalAllowedRockets)
+        {
+            currentRockets = totalAllowedRockets;
+        }
+
+        //AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
+        AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentRockets);
+    }
+
     private void OnDisable()
     {
         //if player changes weapon mid reload
@@ -106,7 +122,7 @@ public class RocketLauncherController : SelectedWeaponController
 
     private IEnumerator reloadRocket()
     {
-        if (totalRockets > 0)
+        if (currentRockets > 0)
         {
 
             // Play Sound of rocket launcher reloading
@@ -117,15 +133,14 @@ public class RocketLauncherController : SelectedWeaponController
 
             yield return new WaitForSecondsRealtime(rocketReloadSpeed);
             
-            totalRockets--;
+            currentRockets--;
             launcherIsReloading = false;
             rocketsInMagazine = 1;
 
             //Update bullet and magazines count on HUD
             AmmoDisplayBroker.CallUpdateAmmoOnHud(rocketsInMagazine, rocketsInMagazine);
-            AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalRockets);
-
-            Debug.LogError("ROCKET LAUNCHER RELOADED");
+            AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentRockets);
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentRockets);
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
         }
@@ -134,6 +149,7 @@ public class RocketLauncherController : SelectedWeaponController
             Debug.Log("NO AMMO LEFT. RUN !!!");
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentRockets);
 
         }
     }

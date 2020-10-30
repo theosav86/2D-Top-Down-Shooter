@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[RequireComponent(typeof(LineRenderer))]
 public class SmgController : SelectedWeaponController
 {
+    #region Variables
 
-    private AudioSource smgSound;
+    private AudioSource smgSound; //Audio Souce Component
 
-    [SerializeField]
-    private AudioClip smgShotClip;
-    [SerializeField]
-    private AudioClip smgEmptyClip;
-    [SerializeField]
-    private AudioClip smgReloadClip;
+    public AudioClip smgShotClip;
+    public AudioClip smgEmptyClip;
+    public AudioClip smgReloadClip;
 
     private int smgDamage = 30;
     private float smgRange = 5f;
@@ -25,33 +24,38 @@ public class SmgController : SelectedWeaponController
     [SerializeField]
     private int smgMagazineSize = 30;
     private int bulletsInMagazine = 30;
-    private int totalMagazines = 5;
+    private int currentMagazineCount = 5;
+    private int totalAllowedMagazines = 15;
     private bool smgIsReloading;
-    //[SerializeField]
-    //private LineRenderer lineRenderer;
+    private LineRenderer lineRenderer;
 
+    private int weaponIndex = 1;
+
+    #endregion
 
     private void OnEnable()
-    {   //if player interrupted the reload
-        
+    {   
+        //if player interrupted the reload
         smgIsReloading = false;
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, smgMagazineSize);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
-
-      //lineRenderer = GetComponent<LineRenderer>();
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
     }
 
     // Start is called before the first frame update
     void Start()
     {
         smgSound = GetComponent<AudioSource>();
+        lineRenderer = GetComponent<LineRenderer>();
+
+        lineRenderer.SetPosition(1, firePoint.position);
 
         //set initial bullets in magazine
         bulletsInMagazine = smgMagazineSize;
 
         //Update bullet count on HUD
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, smgMagazineSize);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+
     }
 
 
@@ -79,6 +83,25 @@ public class SmgController : SelectedWeaponController
                 StartCoroutine(ChangeMagazine());
             }
         }
+
+        if(Input.GetMouseButtonUp(0))
+        {
+            lineRenderer.SetPosition(1, firePoint.position);
+        }
+    }
+
+    //Update Ammo
+    public void UpdateTotalMagazines(int magazine)
+    {
+        currentMagazineCount += magazine;
+
+        if (currentMagazineCount > totalAllowedMagazines)
+        {
+            currentMagazineCount = totalAllowedMagazines;
+        }
+
+        //AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+        AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
     }
 
     private void OnDisable()
@@ -99,8 +122,9 @@ public class SmgController : SelectedWeaponController
 
             //SHOOT
             RaycastHit2D smgHit = Physics2D.Raycast(firePoint.position, firePoint.right, smgRange);
-            //lineRenderer.SetPosition(0,firePoint.position);
-            //lineRenderer.SetPosition(1,firePoint.right * smgRange);
+            lineRenderer.SetPosition(0, firePoint.position);
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z - Camera.main.transform.position.z));
+            lineRenderer.SetPosition(1, (mousePosition));
             bulletsInMagazine--;
 
             //Update bullet count on HUD
@@ -109,12 +133,11 @@ public class SmgController : SelectedWeaponController
             //if enemy hit damage it
             if (smgHit)
             {
-                EnemyController enemyController = smgHit.collider.gameObject.GetComponent<EnemyController>();
+                Enemy enemyController = smgHit.collider.gameObject.GetComponent<Enemy>();
                 if (enemyController != null)
                 {
                     enemyController.TakeDamage(smgDamage);
                 }
-
             }  
         }
         else
@@ -124,14 +147,14 @@ public class SmgController : SelectedWeaponController
         }
 
        
-        Debug.DrawRay(transform.position, transform.right * smgRange, Color.red);
+       // Debug.DrawRay(transform.position, transform.right * smgRange, Color.red);
         Debug.Log("SMG NEW BULLET");
     }
 
-
+    //Coroutine that reloads smg
     private IEnumerator ChangeMagazine()
     {
-        if (totalMagazines > 0)
+        if (currentMagazineCount > 0)
         {
             //call the method in the broker to invoke the reload event for the hud controller
             ReloadWeaponBroker.CallWeaponIsReloading();
@@ -140,15 +163,16 @@ public class SmgController : SelectedWeaponController
             smgSound.PlayOneShot(smgReloadClip);
 
             yield return new WaitForSecondsRealtime(smgReloadSpeed);
-            totalMagazines--;
+            currentMagazineCount--;
             smgIsReloading = false;
             bulletsInMagazine = 30;
 
             //Update bullet and magazine count on HUD
             AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, smgMagazineSize);
-            AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+            AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
 
-            Debug.LogError("SMG RELOADED");
+          //  Debug.LogError("SMG RELOADED");
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
         }
@@ -157,6 +181,7 @@ public class SmgController : SelectedWeaponController
             Debug.LogError("SMG OUT OF AMMO");
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
         }
     }
 

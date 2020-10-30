@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-
-public class ShieldController : MonoBehaviour
+public class ShieldController : MonoBehaviour, IDamagable
 {
     private Animator shieldAnimator;
 
@@ -12,7 +10,7 @@ public class ShieldController : MonoBehaviour
 
     private BoxCollider2D shieldCollider;
 
-    private float shieldHp = 100;
+    private float shieldHp = 100f;
 
     [SerializeField]
     private float shieldDuration = 100f;
@@ -22,6 +20,9 @@ public class ShieldController : MonoBehaviour
   
     [SerializeField]
     private bool isShieldActive = false;
+
+    private float shieldCriticalPercentage = 0.2f;
+    private bool isShieldCritical = false;
 
 
     private void Awake()
@@ -36,9 +37,7 @@ public class ShieldController : MonoBehaviour
     {
         DisableShield();
 
-        ShieldBroker.CallShieldIsDisabled();
-
-        ShieldBroker.ShieldTookDamage += ShieldBroker_ShieldTookDamage;
+        UtilitiesBroker.CallShieldIsDisabled();
 
         shieldTimeLeft = shieldDuration;
     }
@@ -73,7 +72,7 @@ public class ShieldController : MonoBehaviour
         shieldCollider.enabled = true;
         isShieldActive = true;
 
-        ShieldBroker.CallShieldIsEnabled();
+        UtilitiesBroker.CallShieldIsEnabled();
     }
 
     private void DisableShield()
@@ -82,57 +81,61 @@ public class ShieldController : MonoBehaviour
         shieldCollider.enabled = false;
         isShieldActive = false;
 
-        ShieldBroker.CallShieldIsDisabled();
+        UtilitiesBroker.CallShieldIsDisabled();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if(isShieldActive)
+        Enemy enemy = other.GetComponent<Enemy>();
+
+        if (isShieldActive)
         {
-            if(collision.collider.CompareTag("Enemy"))
-            { 
-                Destroy(collision.gameObject); // For testing purpose just destroy the enemy on contact
+            if(enemy != null)
+            {
+                TakeDamage(enemy.collisionDamage);//For now I am using the enemy collision hp damage. I can create a different variable.
+                Destroy(enemy.gameObject); // For testing purpose just destroy the enemy on contact
             }
         }
     }
+
     private void ShieldTimeBurning()
     {
         if (shieldTimeLeft > 0)
         {
             shieldTimeLeft -= Time.deltaTime;
 
-            ShieldBroker.CallShieldIsBurning(shieldTimeLeft);
+            UtilitiesBroker.CallShieldIsBurning(shieldTimeLeft);
+
+            shieldAnimator.SetBool("shieldIsFlashing", false);
+
+            if(shieldTimeLeft < shieldDuration * shieldCriticalPercentage)
+            {
+              //  Debug.Log("Shield critical health!!!");
+                shieldAnimator.SetBool("shieldIsFlashing", true);
+            }
+
+
         }
         else
         {
             //What to do when shield time is depleted
-            isShieldActive = false;
             DisableShield();
-            ShieldBroker.CallShieldIsDepleted();
+            shieldAnimator.SetBool("shieldIsFlashing", false);
+            UtilitiesBroker.CallShieldIsDepleted();
         }
     }
-    private void ShieldBroker_ShieldTookDamage(float damageValue)
+
+    public void TakeDamage(int timeDamageValue)
     {
-        shieldHp -= damageValue;
-        shieldTimeLeft -= damageValue;
+        shieldHp -= timeDamageValue;
+        shieldTimeLeft -= timeDamageValue;
+
+        UtilitiesBroker.CallShieldTookDamage(shieldHp);
+
+        if (shieldHp <= 0)
+        {
+            UtilitiesBroker.CallShieldIsDepleted();
+        }
     }
 
-    private IEnumerator InitialShieldFlashing()
-    {
-        isShieldActive = true;
-
-        shieldSpriteRenderer.enabled = true;
-        shieldCollider.enabled = true;
-
-        shieldAnimator.SetBool("shieldIsFlashing", true);
-
-        yield return new WaitForSecondsRealtime(3);
-
-        shieldAnimator.SetBool("shieldIsFlashing", false);
-
-        shieldSpriteRenderer.enabled = false;
-        shieldCollider.enabled = false;
-
-        isShieldActive = false;
-    }
 }

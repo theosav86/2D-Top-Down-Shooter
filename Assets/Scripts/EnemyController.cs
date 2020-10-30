@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public delegate void EnemyKilledHandler(int pointValue);
+
+/*
+
+//public delegate void EnemyKilledHandler(int pointValue);
 public class EnemyController : MonoBehaviour
 {
     //explosion animation or particle
@@ -34,13 +37,6 @@ public class EnemyController : MonoBehaviour
         //enemyAnimatorController = GetComponent<Animator>();
     }
 
-   
-    // Update is called once per frame
-    void Update()
-    {
-        
-       
-    }
 
     private void FixedUpdate()
     {
@@ -62,7 +58,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.tag);
+        Debug.Log("Enemy hit " + collision.gameObject.tag);
 
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -93,7 +89,7 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void EnemyDies()
+   public void EnemyDies()
     {
         if(EnemyKilled != null)
         {
@@ -108,5 +104,5 @@ public class EnemyController : MonoBehaviour
         Destroy(gameObject);
     }
 
-}
+}*/
 

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class MouseController : MonoBehaviour
 {
     #region Variables
@@ -14,7 +12,6 @@ public class MouseController : MonoBehaviour
     private Vector2 lookDirection;
     private Transform aimPoint;
     private LayerMask enemyLayer = 12;
-    [SerializeField]
     private Camera sceneMainCamera;
 
     private Rigidbody2D playerRigidbody;
@@ -67,7 +64,7 @@ public class MouseController : MonoBehaviour
         
 
         //This is radiants. Need to change it to degrees. This is why we use Rad2Deg.
-        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg; //Atabn2 method takes Y coordinate first then the X coordinate.
+        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg; //Atan2 method takes Y coordinate first then the X coordinate.
         playerRigidbody.rotation = angle;
        
     }

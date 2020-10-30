@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c836073929fa2c41b25a982128249f5, type: 3}
+  m_Name: Level_1
+  m_EditorClassIdentifier: 
+  levelOrder: 1
+  enemyCount: 50
+  spawnTimer: 0.2
+  chanceToSpawnStalker: 0
+  chanceToSpawnDiamond: 0
+  enemyTypes:
+  - {fileID: 8394925028665900848, guid: 34faf9809b2fcfc4da5f773b0cd1eb99, type: 3}
+  - {fileID: 3064917122358063883, guid: 7d3c015980d32c049a40671a0a64c148, type: 3}

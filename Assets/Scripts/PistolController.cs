@@ -6,26 +6,28 @@ using UnityEngine.Audio;
 public class PistolController : SelectedWeaponController
 {
 
+    #region Variables
+
     public GameObject bullet; //visible in the Inspector to place the bullet prefab itself.
 
     private AudioSource pistolSound;
 
-    [SerializeField]
-    private AudioClip pistolShotClip;
+    public AudioClip pistolShotClip;
 
-    [SerializeField]
-    private AudioClip pistolEmptyClip;
+    public AudioClip pistolEmptyClip;
 
-    [SerializeField]
-    private AudioClip pistolReloadClip;
+    public AudioClip pistolReloadClip;
 
 
     [SerializeField]
     private const int pistolRange = 20;
 
-    private int totalMagazines = 10;
+    private int currentMagazineCount = 10;
+
+    private int totalAllowedMagazines = 20;
 
     private int magazineSize = 12;
+
     [SerializeField]
     private float pistolReloadSpeed = 1.5f; //in seconds
    
@@ -38,14 +40,16 @@ public class PistolController : SelectedWeaponController
     
     private int bulletsInMagazine = 12;
 
-   
+    private int weaponIndex = 0;
+
+    #endregion
 
     private void OnEnable()
     {   //if player interrupted the reload this is a check to see if the gun had bullets inside the magazine.
         
         pistolIsReloading = false;
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, magazineSize);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
         
     }
 
@@ -58,7 +62,8 @@ public class PistolController : SelectedWeaponController
 
         //Update ammo and magazine count on HUD
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, magazineSize);
-        AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+        AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+        AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
     }
 
     // Update is called once per frame
@@ -78,6 +83,21 @@ public class PistolController : SelectedWeaponController
             }
         }
     }
+
+    //Update Ammo
+    public void UpdateTotalMagazines(int magazine)
+    {
+        currentMagazineCount += magazine;
+
+        if(currentMagazineCount > totalAllowedMagazines)
+        {
+            currentMagazineCount = totalAllowedMagazines;
+        }
+
+        //AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
+        AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
+    }
+
 
     private void OnDisable()
     {
@@ -121,9 +141,8 @@ public class PistolController : SelectedWeaponController
     
     private IEnumerator ChangeMagazine()
     {
-        //yield return new WaitForSeconds(reloadSpeed);
 
-        if (totalMagazines > 0)
+        if (currentMagazineCount > 0)
         {
             //Pistol reload SOUND
             pistolSound.PlayOneShot(pistolReloadClip);
@@ -131,7 +150,8 @@ public class PistolController : SelectedWeaponController
             //Update the HUD to notify the player that the gun is reloading
             ReloadWeaponBroker.CallWeaponIsReloading();
 
-            totalMagazines--;
+            currentMagazineCount--;
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
 
             //Wait for reload time
             yield return new WaitForSecondsRealtime(pistolReloadSpeed);
@@ -140,7 +160,7 @@ public class PistolController : SelectedWeaponController
             bulletsInMagazine = magazineSize;
 
             AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, magazineSize);
-            AmmoDisplayBroker.CallUpdateMagazinesOnHud(totalMagazines);
+            AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
 
@@ -150,6 +170,7 @@ public class PistolController : SelectedWeaponController
             Debug.Log("NO AMMO LEFT. RUN !!!");
 
             ReloadWeaponBroker.CallWeaponFinishedReloading();
+            AmmoDisplayBroker.CallUpdateMagazinesOnStore(weaponIndex, currentMagazineCount);
         }
     }
 

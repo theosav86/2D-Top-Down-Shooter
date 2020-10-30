@@ -9,78 +9,36 @@ public class RocketProjectileController : MonoBehaviour
 
     [SerializeField]
     private int rocketDamage = 100;
- // /*[SerializeField]
- //   private float rocketSpeed = 100f;
     [SerializeField]
     private float rocketSplashRadius = 3.0f;
-
-   // private GameObject target;
-  
-
-    //declaration of event rockethitenemy
-   // public event ProjectileHitEnemyHandler RocketHitEnemy;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-     //   target = GameObject.FindGameObjectWithTag("RocketRadiusImage");
-    }
-
-    /*private void FixedUpdate()
-    {
-        transform.position = Vector3.MoveTowards(transform.position, target.transform.position, rocketSpeed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, target.transform.position) < 1f)
-        {
-
-            Collider2D[] targetColliders = Physics2D.OverlapCircleAll(transform.position, rocketSplashRadius, 12);
-
-
-            foreach (Collider2D collider in targetColliders)
-            {
-                if (collider.gameObject != null)
-                { 
-                    collider.gameObject.GetComponent<EnemyController>().TakeDamage(rocketDamage);
-                }
-            }
-
-            Destroy(gameObject);
-            Destroy(target.gameObject);
-        }
-    }*/
-
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Collider2D[] collidersHitByRocketSplash;
-        collidersHitByRocketSplash = Physics2D.OverlapCircleAll(transform.position, rocketSplashRadius);
+        collidersHitByRocketSplash = Physics2D.OverlapCircleAll(this.transform.position, rocketSplashRadius);
+
+        Enemy enemy = collision.collider.GetComponent<Enemy>();
 
         foreach(Collider2D collider in collidersHitByRocketSplash)
         {
-            if(collider.CompareTag("Enemy"))
+            Enemy e = collider.GetComponent<Enemy>();
+
+            if (e != null)
             {
-                collider.GetComponent<EnemyController>().TakeDamage(rocketDamage);
+                e.TakeDamage(rocketDamage);
             }
         }
 
-
-
         //APPLY DAMAGE ON ENEMYCONTROLLER INSTANCE THAT WAS HIT
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (enemy != null)
         {
-            /* if (RocketHitEnemy != null)
-             {
-                 RocketHitEnemy(); //Invoke the event.  We type it as if it was a method, with () at the end.
-             }
-             */
-
              //apply damage
             //Debug.Log("Rocket HIT ENEMY COLLIDER METHOD IN PROJECTILE");
-            collision.gameObject.GetComponent<EnemyController>().TakeDamage(rocketDamage);
+            enemy.TakeDamage(rocketDamage);
 
         }
 
-        //INSTANTIATE PISTOL BULLER EXPLOSION PARTICLES
+        //INSTANTIATE ROCKET BULLET EXPLOSION PARTICLES
         GameObject rocketExplosionEffect = Instantiate(rocketExplosion, transform.position, Quaternion.identity);//instantiate the particle or animation of bullet explosion on collision with anything.
 
         //Instead of Destroy(bulletExplosionEffect) I used a script on the particle called SelfDestruct
@@ -88,7 +46,5 @@ public class RocketProjectileController : MonoBehaviour
 
         //Destroy the bullet Prefab on collision with anything
         Destroy(gameObject);
-
     }
-
 }

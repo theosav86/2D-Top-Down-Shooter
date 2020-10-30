@@ -1,53 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+using UnityEngine.Events;
 
-public class GameSceneController : MonoBehaviour
+
+public class GameSceneController : Singleton<GameSceneController>
 {
-    //event declaration to update the score
-    public event EnemyKilledHandler UpdateScoreOnKill;
+    #region Variables
 
-    //event declaration to update player health
-    public event PlayerTookDamageHandler UpdateHealthOnDamage;
-
-  
     public int level = 1;
     public Transform[] enemySpawnPoints;
     public int numberOfEnemies = 50;
+
     [SerializeField]
     private float enemySpawnDelay = 0.5f;
 
-    private int currentScore = 0;
-    private int currentHealth = 100;
-    public EnemyController enemyPrefab;
+    public Transform[] diamontPatrolPoints;
 
-    private PlayerController playerController;
+    public PlayerController playerController;
+
+    public Levels[] levels;
+
+    private int levelIndex;
+
+    #endregion
+
+    private void Awake()
+    {
+        
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-      
-        playerController = FindObjectOfType<PlayerController>();
-        playerController.PlayerTookDamage += PlayerController_PlayerTookDamage;
+        PlayerEvents.PlayerChangedState += CheckPlayerState;
+
+        levelIndex = 1;
  
         //Start spawning of enemies
         StartCoroutine(SpawnEnemies());
     }
 
-    //method that generated from the subscription of GameSceneController class to the PlayerTookDamage Event.
-    private void PlayerController_PlayerTookDamage(int damageValue)
-    {
-        currentHealth -= damageValue;
 
-        if (UpdateHealthOnDamage != null)
-        {
-            UpdateHealthOnDamage(currentHealth);//invoking new parameterized event UpdateHealthOnDamage
-        }
-    }
-
-   
+   //Coroutine that spawns enemies
     private IEnumerator SpawnEnemies()
     {
         WaitForSeconds wait = new WaitForSeconds(level + enemySpawnDelay);
@@ -61,32 +56,33 @@ public class GameSceneController : MonoBehaviour
             Transform randomEnemySpawnPosition = enemySpawnPoints[selectedRandomSpawnPoint];
 
             //create an instance of an enemy on random enemy spawn position
-            EnemyController enemy = Instantiate(enemyPrefab, randomEnemySpawnPosition.position, Quaternion.identity);
-           // enemy.gameObject.layer = LayerMask.NameToLayer("Enemy");
+        ////    StalkerController enemy = Instantiate(stalkerEnemyPrefab, randomEnemySpawnPosition.position, Quaternion.identity);
+            // enemy.gameObject.layer = LayerMask.NameToLayer("Enemy");
+     //       Mathf.Clamp()
+            Enemy enemy = Instantiate(levels[levelIndex].enemyTypes[Random.Range(0, levels[levelIndex].enemyTypes.Length)], randomEnemySpawnPosition.position, Quaternion.identity);
+
+            enemy.Initialize(diamontPatrolPoints);
 
             // enemy.shotSpeed = currentLevel.enemyShotSpeed;
             // enemy.speed = currentLevel.enemySpeed;
             // enemy.shotdelayTime = currentLevel.enemyShotDelay;
-            // enemy.angerdelayTime = currentLevel.enemyAngerDelay;
-
-            //subscribing to the event EnemyKilled
-            enemy.EnemyKilled += Enemy_EnemyKilled;  
+            // enemy.angerdelayTime = currentLevel.enemyAngerDelay;            
 
             yield return wait;
         }
     }
 
-
-    //method generated from the subscription to the event EnemyKilled
-    private void Enemy_EnemyKilled(int pointValue)
+    private void CheckPlayerState(PlayerBaseState newState)
     {
-
-        //add point value to HUD
-        currentScore += pointValue;
-
-        if(UpdateScoreOnKill != null)
+        if(!playerController.isUsing)
         {
-            UpdateScoreOnKill(currentScore); //invoking new parameterized event UpdateScoreOnKill
+            
+            Time.timeScale = 1f;
+        }
+        else if(playerController.isUsing)
+        {
+            Time.timeScale = 0f;
         }
     }
+
 }

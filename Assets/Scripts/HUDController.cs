@@ -7,42 +7,49 @@ using TMPro;
 public class HUDController : MonoBehaviour
 {
     #region Variables
-    private GameSceneController gameSceneController;
 
     public Canvas canvas;
     public Gradient healthBarColorGradient;
     public Gradient shieldBarColorGradient;
+    public Gradient batteryBarColorGradient;
     public Slider healthSlider;
     public Slider shieldSlider;
+    public Slider batterySlider;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI playerShieldStatusText; // ON / OFF
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI scrapText;
     public TextMeshProUGUI playerHealthStatusText; //Healthy., In Business..., Critical !!!
     public TextMeshProUGUI reloadingText;
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI magazinesLeftText;
+    public TextMeshProUGUI batteryText;
 
     public Image healthFillColorImage;
     public Image shieldFillColorImage;
+    public Image batteryFillColorImage;
+
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
-        //Actually Create HealthBroker for sure!
-        //PlayerHealthBroker.playertookdamage etc.
+        #region Event Subscriptions
 
         //Subscribing to the Shield is Draining Event.
-        ShieldBroker.ShieldIsBurning += ShieldBroker_ShieldIsBurning;
+        UtilitiesBroker.ShieldIsBurning += ShieldBroker_ShieldIsBurning;
 
         //Subscribing to the Shield is Enabled Event.
-        ShieldBroker.ShieldIsEnabled += ShieldBroker_ShieldIsEnabled;
+        UtilitiesBroker.ShieldIsEnabled += ShieldBroker_ShieldIsEnabled;
 
         //Subscribing to the Shield is Disabled Event.
-        ShieldBroker.ShieldIsDisabled += ShieldBroker_ShieldIsDisabled;
+        UtilitiesBroker.ShieldIsDisabled += ShieldBroker_ShieldIsDisabled;
 
         //Subscribing to the Shield is Depleted Event.
-        ShieldBroker.ShieldIsDepleted += ShieldBroker_ShieldIsDepleted;
+        UtilitiesBroker.ShieldIsDepleted += ShieldBroker_ShieldIsDepleted;
+
+        //Subscribing to the Battery is Draining Event.
+        UtilitiesBroker.FlashlightIsBurning += UtilitiesBroker_FlashlightIsBurning;
 
         //Subscribing to the reload weapon event in the ReloadWeapon broker class
         ReloadWeaponBroker.WeaponIsReloading += ReloadWeaponBroker_WeaponIsReloading;
@@ -56,26 +63,51 @@ public class HUDController : MonoBehaviour
         //Subscribing to the Magazines update event in the AmmoDisplay broker class
         AmmoDisplayBroker.UpdateMagazinesOnHud += AmmoDisplayBroker_UpdateMagazinesOnHud;
 
-        //Initialize the HUD SLIDER with color and value and lastly the health status text. Stupid stuff right here
+        //Subscribing to Player Events update health on hud
+        PlayerEvents.PlayerRemainingHP += UpdateHUDHealthOnDamage;
+
+        //Subscribing to Player Events update Score on hud
+        PlayerEvents.UpdatePlayerScore += PlayerEvents_UpdatePlayerScore;
+
+        //Subscribing to Player Events update Scrap on hud
+        PlayerEvents.UpdatePlayerScrap += PlayerEvents_UpdatePlayerScrap;
+
+        #endregion
+
+        #region HUD Initialization
+
+        //Initialize the HEALTH HUD SLIDER with color and value and lastly the health status text.
         playerHealthStatusText.text = "Healthy.";
         healthSlider.maxValue = 100;
         healthFillColorImage.color = healthBarColorGradient.Evaluate(healthSlider.normalizedValue);
 
-        //Initialize the HUD SHIELD SLIDER with color and value and lastly the shield status text. Are you sure it was stupid? I think it works ok now.
+        //Initialize the SHIELD HUD SLIDER with color and value and lastly the shield status text.
         playerShieldStatusText.text = "OFF...";
-        healthSlider.maxValue = 100;
+        shieldSlider.maxValue = 100;
         shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
 
-        //Reference to GameSceneController in order to subscribe to its events
-        gameSceneController = FindObjectOfType<GameSceneController>();
+        //Initialize the BATTERY HUD SLIDER with color and value and lastly the shield status text.
+        batteryText.text = "ALKALINE";
+        batterySlider.maxValue = 100;
+        batteryFillColorImage.color = shieldBarColorGradient.Evaluate(batterySlider.normalizedValue);
 
-        //The class HUDController subscribes to the event gamescenecontroller update score on kill. It could be any other class as long as there is a reference to game scene controller class. get component<ClassName>
-        gameSceneController.UpdateScoreOnKill += GameSceneController_UpdateScoreOnKill;
-        //The class HUDController subscribes to the event gamescenecontroller update health on damage. It could be any other class as long as there is a reference to game scene controller class. get component<ClassName>
-        gameSceneController.UpdateHealthOnDamage += GameSceneController_UpdateHealthOnDamage;
-
+        #endregion
     }
 
+    private void PlayerEvents_UpdatePlayerScrap(int currentScrapValue)
+    {
+        UpdateScrap(currentScrapValue);
+    }
+
+    private void PlayerEvents_UpdatePlayerScore(int currentScoreValue)
+    {
+        UpdateScore(currentScoreValue);
+    }
+
+    private void UpdateHUDHealthOnDamage(int currPlayerHP)
+    {
+        UpdateHealth(currPlayerHP);
+    }
 
     private void ShieldBroker_ShieldIsDepleted()
     {
@@ -100,6 +132,11 @@ public class HUDController : MonoBehaviour
         playerShieldStatusText.color = Color.red;
     }
 
+    private void UtilitiesBroker_FlashlightIsBurning(float batteryLeft)
+    {
+        UpdateBattery(batteryLeft);
+    }
+
     private void AmmoDisplayBroker_UpdateMagazinesOnHud(int magazinesLeft)
     {
         magazinesLeftText.text = "Magazines Left " + magazinesLeft;
@@ -122,7 +159,6 @@ public class HUDController : MonoBehaviour
         else
         {
             ammoText.color = Color.white;
-
         }
     }
 
@@ -135,28 +171,15 @@ public class HUDController : MonoBehaviour
         reloadingText.GetComponent<Animator>().SetBool("PlayReload", false);
     }
 
-    private void GameSceneController_UpdateHealthOnDamage(int damageValue)
-    {
-        UpdateHealth(damageValue);
-    }
-
-    private void GameSceneController_UpdateScoreOnKill(int pointValue)
-    {
-        UpdateScore(pointValue);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     //method to update the score WHEN an enemy is killed
-    private void UpdateScore(int pointValue)
+    private void UpdateScore(int currentScore)
     {
-        scoreText.text = "Score: " + pointValue.ToString("D6");
-    
+        scoreText.text = "Score: " + currentScore.ToString("D6");   
+    }
+
+    private void UpdateScrap(int currentScrap)
+    {
+        scrapText.text = "Scrap: " + currentScrap.ToString("D4");
     }
 
     //method to update the score WHEN player takes damage
@@ -171,7 +194,7 @@ public class HUDController : MonoBehaviour
         healthText.text = "Health: " + damageValue.ToString("D3");
 
 
-        //UPDATE THE HUD SLIDER TEXT. STUPID STUFF RIGHT HERE AS WELL!!!
+        //UPDATE THE HUD SLIDER TEXT.
         if (damageValue > 70)
         {
             playerHealthStatusText.text = "Healthy.";
@@ -196,12 +219,18 @@ public class HUDController : MonoBehaviour
 
     private void ShieldIsDepleted()
     {
-            shieldSlider.value = 0f;
-            shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
+        shieldSlider.value = 0f;
+        shieldFillColorImage.color = shieldBarColorGradient.Evaluate(shieldSlider.normalizedValue);
 
-            //Change the on/off Text to Depleted
-            playerShieldStatusText.text = "Depleted!!!";
-            playerShieldStatusText.color = Color.red;
+        //Change the on/off Text to Depleted
+        playerShieldStatusText.text = "Depleted!!!";
+        playerShieldStatusText.color = Color.red;
+    }  
+
+    private void UpdateBattery(float batteryRemaining)
+    {
+        batterySlider.value = batteryRemaining;
+        //normalized value because the Gradient.evaluate goes from 0f - 1f but our health might be 25 or 100 or w/e.
+        batteryFillColorImage.color = batteryBarColorGradient.Evaluate(batterySlider.normalizedValue);
     }
-     
 }
