@@ -37,13 +37,11 @@ public class SmgController : SelectedWeaponController
     #endregion
 
     private void OnEnable()
-    {   //if player interrupted the reload
-        
+    {   
+        //if player interrupted the reload
         smgIsReloading = false;
         AmmoDisplayBroker.CallUpdateAmmoOnHud(bulletsInMagazine, smgMagazineSize);
         AmmoDisplayBroker.CallUpdateMagazinesOnHud(currentMagazineCount);
-
-      //lineRenderer = GetComponent<LineRenderer>();
     }
 
     // Start is called before the first frame update

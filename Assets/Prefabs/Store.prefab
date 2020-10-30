@@ -122,3 +122,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   storeHudPanel: {fileID: 0}
+  pistolMagCountText: {fileID: 0}
+  smgMagCountText: {fileID: 0}
+  rocketMagCountText: {fileID: 0}

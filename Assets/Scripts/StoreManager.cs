@@ -41,14 +41,13 @@ public class StoreManager : MonoBehaviour, IInteractable
     public void UseInteractable()
     {
         storeHudPanel.gameObject.SetActive(true);
-        Time.timeScale = 0;
     }
 
+    //Shuts down Store
+    //Turns off the Store Panel on the HUD
     public void StopUseInteractable()
     {
         storeHudPanel.gameObject.SetActive(false);
-        Time.timeScale = 1;
     }
 
-    
 }

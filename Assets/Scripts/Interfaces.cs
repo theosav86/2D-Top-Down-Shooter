@@ -6,5 +6,7 @@ using UnityEngine;
 public interface IInteractable
 {
     void UseInteractable();
+
+    void StopUseInteractable();
 }
 

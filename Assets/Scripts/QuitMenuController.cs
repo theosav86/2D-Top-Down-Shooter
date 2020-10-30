@@ -8,6 +8,11 @@ public class QuitMenuController : MonoBehaviour
 {
     public GameObject quitPanel;
 
+    private void Start()
+    {
+        
+    }
+
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
@@ -15,6 +20,12 @@ public class QuitMenuController : MonoBehaviour
             quitPanel.SetActive(true);
             Time.timeScale = 0;
         }
+    }
+
+    private void ShowQuitMenu()
+    {
+        quitPanel.SetActive(true);
+        Time.timeScale = 0;
     }
     
     public void QuitGame()

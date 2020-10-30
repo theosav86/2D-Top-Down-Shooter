@@ -198,7 +198,7 @@ public class DiamontEnemyController : Enemy
     public override void EnemyDies()
     {
         EnemyBroker.CallEnemyKilled(pointValue, scrapValue);
-
+       
         Destroy(gameObject);
     }
 

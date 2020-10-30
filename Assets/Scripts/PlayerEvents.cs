@@ -2,6 +2,7 @@
 
 public class PlayerEvents
 {
+    //Stats Events
     public static event Action<float> PlayerTookDamage;
 
     public static event Action<int> PlayerRemainingHP;
@@ -11,6 +12,12 @@ public class PlayerEvents
     public static event Action<int> UpdatePlayerScrap;
 
     public static event Action PlayerDied;
+
+    //Interact and State Events
+    public static event Action<PlayerBaseState> PlayerChangedState;
+
+
+
 
     public static void CallPlayerTookDamage(float damageValue)
     {
@@ -48,6 +55,14 @@ public class PlayerEvents
         if (UpdatePlayerScrap != null)
         {
             UpdatePlayerScrap(scrapValue);
+        }
+    }
+
+    public static void CallPlayerChangedState(PlayerBaseState newPlayerState)
+    {
+        if (PlayerChangedState != null)
+        {
+            PlayerChangedState(newPlayerState);
         }
     }
 }

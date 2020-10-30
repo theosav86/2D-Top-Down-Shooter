@@ -85,6 +85,9 @@
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\PlayerDetection.cs" />
     <Compile Include="Assets\Scripts\PlayerEvents.cs" />
+    <Compile Include="Assets\Scripts\PlayerStates\PlayerBaseState.cs" />
+    <Compile Include="Assets\Scripts\PlayerStates\PlayerNormalState.cs" />
+    <Compile Include="Assets\Scripts\PlayerStates\PlayerShopState.cs" />
     <Compile Include="Assets\Scripts\PlayerStats.cs" />
     <Compile Include="Assets\Scripts\QuitMenuController.cs" />
     <Compile Include="Assets\Scripts\ReloadWeaponBroker.cs" />

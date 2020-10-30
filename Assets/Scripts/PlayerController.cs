@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour
     private float enemyCollisionDamageValue = 30;
 
     //select weapon variables
-    private SelectedWeaponController selectedWeapon;
+    [HideInInspector]
+    public SelectedWeaponController weaponHolder;
 
     public GameObject flashLight;
     private bool flashLightEnabled = false;
@@ -22,10 +23,18 @@ public class PlayerController : MonoBehaviour
 
     public float interactRadius = 2f;
     public LayerMask interactLayer;
+    
     public bool canInteract = false;
 
     private bool movementIsEnabled = true;
     private MouseController mouseController;
+
+    public IInteractable item;
+
+    private PlayerBaseState currentState;
+
+    public readonly PlayerNormalState normalState = new PlayerNormalState();
+    public readonly PlayerShopState useState = new PlayerShopState();
 
     #endregion
 
@@ -33,15 +42,28 @@ public class PlayerController : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerStats = GetComponent<PlayerStats>();
-        selectedWeapon = GetComponentInChildren<SelectedWeaponController>(); // so we have access in variable firePoint for example. I AM NOT USING THIS ONE. MAYBE DELETE IT .
+        weaponHolder = GetComponentInChildren<SelectedWeaponController>(); // so we have access in variable firePoint for example. I AM NOT USING THIS ONE. MAYBE DELETE IT .
         mouseController = GetComponent<MouseController>();
         flashLightBatteryLife = maxFlashLightBatteryLife;
         flashLight.SetActive(false);
     }
 
+    private void Start()
+    {
+        TransitionToState(normalState);
+    }
+
+    //Getter for currentState
+    public PlayerBaseState CurrentState
+    {
+        get { return currentState; }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        currentState.Update(this);
+
         axisInput.x = Input.GetAxisRaw("Horizontal");
         axisInput.y = Input.GetAxisRaw("Vertical");
 
@@ -56,10 +78,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if(Input.GetButtonDown("Use") && canInteract)
-        {
-            Use();  
-        }
+        
     }
 
     private void FixedUpdate()
@@ -118,18 +137,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Use()
+    public void Use()
     {
 
         Collider2D[] interactables;
 
         interactables = Physics2D.OverlapCircleAll(transform.position, interactRadius);
 
-        Debug.Log(interactables);
-
         foreach(Collider2D interactable in interactables)
         {
-            IInteractable item = interactable.GetComponent<IInteractable>();
+            item = interactable.GetComponent<IInteractable>();
 
             if (item != null)
             {
@@ -138,5 +155,12 @@ public class PlayerController : MonoBehaviour
             }
         }
         
+    }
+
+    public void TransitionToState(PlayerBaseState newState)
+    {
+        currentState = newState;
+        PlayerEvents.CallPlayerChangedState(currentState);
+        currentState.EnterState(this);
     }
 }

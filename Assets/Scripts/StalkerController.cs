@@ -14,9 +14,8 @@ public class StalkerController : Enemy
     //private Animator enemyAnimatorController;
 
     [SerializeField]
-    private int pointValue = 2;
-    [SerializeField]
-    private int scrapValue = 10;
+    private int pointValue = 10;
+    private int scrapValue = 5;
     private Transform playerTransform;
     private Vector3 enemyDirection;
     private Rigidbody2D enemyRigidBody;

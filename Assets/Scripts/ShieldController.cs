@@ -110,7 +110,7 @@ public class ShieldController : MonoBehaviour
 
             if(shieldTimeLeft < shieldDuration * shieldCriticalPercentage)
             {
-                Debug.Log("Shield critical health!!!");
+              //  Debug.Log("Shield critical health!!!");
                 shieldAnimator.SetBool("shieldIsFlashing", true);
             }
 
@@ -132,29 +132,9 @@ public class ShieldController : MonoBehaviour
 
         UtilitiesBroker.CallShieldTookDamage(shieldHp);
 
-        if(shieldHp <= 0)
+        if (shieldHp <= 0)
         {
             UtilitiesBroker.CallShieldIsDepleted();
         }
     }
-
-   /* private IEnumerator InitialShieldFlashing()
-    {
-        isShieldActive = true;
-
-        shieldSpriteRenderer.enabled = true;
-        shieldCollider.enabled = true;
-
-        shieldAnimator.SetBool("shieldIsFlashing", true);
-
-        yield return new WaitForSecondsRealtime(3f);
-
-        shieldAnimator.SetBool("shieldIsFlashing", false);
-
-        shieldSpriteRenderer.enabled = false;
-        shieldCollider.enabled = false;
-
-        isShieldActive = false;
-    }
-   */
 }

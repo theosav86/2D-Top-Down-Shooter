@@ -17,11 +17,11 @@ public class PlayerStats : Singleton<PlayerStats>
     private int playerCurrentHealth;
 
     //SCRAP
-    private int playerMaxScrap;
-    public int playerCurrentScrap;
+    public int playerCurrentScrap = 0;
+    private int playerMaxScrap = 9999;
 
     //SCORE
-    public int playerCurrentScore;
+    public int playerCurrentScore = 0;
     
 
     [SerializeField]
@@ -40,8 +40,6 @@ public class PlayerStats : Singleton<PlayerStats>
         else
         {
             playerCurrentHealth = playerMaxHealth;
-
-            playerCurrentScrap = playerMaxScrap;
         }
 
         //subscribing to the event EnemyKilled
@@ -71,7 +69,7 @@ public class PlayerStats : Singleton<PlayerStats>
 
         //Invoking Update Score/Scrap events to update the HUD
         PlayerEvents.CallUpdatePlayerScore(playerCurrentScore); 
-        PlayerEvents.CallUpdatePlayerScore(playerCurrentScrap);   
+        PlayerEvents.CallUpdatePlayerScrap(playerCurrentScrap);   
     }
 
     public void TakeHealthDamage(int damageValue)

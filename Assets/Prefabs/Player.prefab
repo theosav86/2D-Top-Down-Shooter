@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ca90adcfdbbfc4db74e607849873f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponHolder: {fileID: 0}
   flashLight: {fileID: 1011996312}
   flashLightBatteryLife: 100
   interactRadius: 2
@@ -1218,7 +1219,7 @@ GameObject:
   - component: {fileID: 6087381296558214096}
   - component: {fileID: 6087381296558214099}
   m_Layer: 20
-  m_Name: SelectedWeapon
+  m_Name: WeaponHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

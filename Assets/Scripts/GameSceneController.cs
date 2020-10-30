@@ -26,9 +26,16 @@ public class GameSceneController : Singleton<GameSceneController>
 
     #endregion
 
+    private void Awake()
+    {
+        
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        PlayerEvents.PlayerChangedState += CheckPlayerState;
+
         levelIndex = 1;
  
         //Start spawning of enemies
@@ -63,6 +70,18 @@ public class GameSceneController : Singleton<GameSceneController>
             // enemy.angerdelayTime = currentLevel.enemyAngerDelay;            
 
             yield return wait;
+        }
+    }
+
+    private void CheckPlayerState(PlayerBaseState newState)
+    {
+        if(newState == playerController.normalState)
+        {
+            Time.timeScale = 1f;
+        }
+        else if(newState == playerController.useState)
+        {
+            Time.timeScale = 0.1f;
         }
     }
 
