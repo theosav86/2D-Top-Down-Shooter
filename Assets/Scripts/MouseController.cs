@@ -8,16 +8,14 @@ public class MouseController : MonoBehaviour
 
     //private variables for Aiming
     private Vector2 mousePosition;
-    private Vector2 playerPosition;
     private Vector2 lookDirection;
-    private Transform aimPoint;
-    private LayerMask enemyLayer = 12;
     private Camera sceneMainCamera;
 
     private Rigidbody2D playerRigidbody;
 
-
     public Texture2D[] cursors;
+
+    private Vector2 cursrorOffset = new Vector2(16f, 16f);
 
     #endregion
 
@@ -27,7 +25,8 @@ public class MouseController : MonoBehaviour
         sceneMainCamera = Camera.main;
         playerRigidbody = GetComponent<Rigidbody2D>();
         PlayerController playerController = GetComponent<PlayerController>();
-        playerPosition = playerController.transform.position;
+
+        Cursor.SetCursor(cursors[0], cursrorOffset, CursorMode.ForceSoftware);
     }
 
     // Update is called once per frame
@@ -35,8 +34,8 @@ public class MouseController : MonoBehaviour
     {
         //Position of the mouse cursor Vector 2
         //position of the camera Input mousePosition
-        mousePosition = sceneMainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z - sceneMainCamera.transform.position.z));
-        
+        mousePosition = sceneMainCamera.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+      
         //Check if the player is aiming
         if (Input.GetMouseButtonDown(1))
         {
@@ -61,12 +60,11 @@ public class MouseController : MonoBehaviour
     {
         //Rotation of the player according to mouse position (mousePos - playerPos)
         lookDirection = mousePosition - playerRigidbody.position;
-        
 
         //This is radiants. Need to change it to degrees. This is why we use Rad2Deg.
-        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg; //Atan2 method takes Y coordinate first then the X coordinate.
-        playerRigidbody.rotation = angle;
-       
+         float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg; //Atan2 method takes Y coordinate first then the X coordinate.
+         playerRigidbody.rotation = angle;       
+
     }
 
     private void AimSelectedWeapon()

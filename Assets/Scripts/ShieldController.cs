@@ -125,6 +125,7 @@ public class ShieldController : MonoBehaviour, IDamagable
         }
     }
 
+    //Implementation of IDamagable
     public void TakeDamage(int timeDamageValue)
     {
         shieldHp -= timeDamageValue;

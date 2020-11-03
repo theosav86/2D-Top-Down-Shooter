@@ -493,11 +493,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.3
   far clip plane: 100
-  field of view: 42.6
+  field of view: 172.1
   orthographic: 1
-  orthographic size: 16.42
+  orthographic size: 15
   m_Depth: 10
   m_CullingMask:
     serializedVersion: 2
@@ -521,7 +521,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.58, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1304,6 +1304,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6087381294892116273, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: cursors.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381294892116273, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: cursors.Array.data[0]
+      value: 
+      objectReference: {fileID: 2800000, guid: 437ded3d81ced1c44aaefe2ce9b28023, type: 3}
     - target: {fileID: 6087381294892116276, guid: 1df3f8c2d67632744acac75dae9f7a7c,
         type: 3}
       propertyPath: m_Name
@@ -1363,6 +1373,61 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381294892116278, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381295496831148, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381295496831149, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381296171143672, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381296171143672, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381296171143673, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381296193411208, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381296193411211, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381296193411211, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381296357730690, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6087381296357730690, guid: 1df3f8c2d67632744acac75dae9f7a7c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1df3f8c2d67632744acac75dae9f7a7c, type: 3}
@@ -1729,6 +1794,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 9197077984203806862, guid: 480a8cef5d39aa04dab41525fefad146,
+        type: 3}
+      propertyPath: m_PlaneDistance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9197077984507748325, guid: 480a8cef5d39aa04dab41525fefad146,
         type: 3}
       propertyPath: m_AnchoredPosition.y
